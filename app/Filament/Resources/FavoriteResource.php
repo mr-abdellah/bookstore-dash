@@ -3,34 +3,52 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\FavoriteResource\Pages;
-use App\Filament\Resources\FavoriteResource\RelationManagers;
 use App\Models\Favorite;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
 
 class FavoriteResource extends Resource
 {
     protected static ?string $model = Favorite::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-heart';
-    protected static ?string $navigationGroup = 'User Interaction';
+
+    public static function getLabel(): ?string
+    {
+        return __('sidebar.favorites');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('sidebar.favorites');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('sidebar.user_interaction');
+    }
 
     public static function canCreate(): bool
     {
         return false;
     }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
+                TextInput::make('user_id')
+                    ->label(fn() => __('favorite.user_id'))
                     ->required()
                     ->maxLength(36),
-                Forms\Components\TextInput::make('book_id')
+
+                TextInput::make('book_id')
+                    ->label(fn() => __('favorite.book_id'))
                     ->required()
                     ->maxLength(36),
             ]);
@@ -40,16 +58,20 @@ class FavoriteResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('user_id')
+                    ->label(fn() => __('favorite.user_id'))
+                    ->searchable(),
 
-                Tables\Columns\TextColumn::make('user_id')
+                TextColumn::make('book_id')
+                    ->label(fn() => __('favorite.book_id'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('book_id')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -58,11 +80,11 @@ class FavoriteResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

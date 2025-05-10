@@ -17,27 +17,43 @@ class AuthorResource extends Resource
     protected static ?string $model = Author::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-pencil';
-    protected static ?string $navigationGroup = 'Books & Content';
+
+    public static function getLabel(): ?string
+    {
+        return __('sidebar.authors');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('sidebar.authors');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('sidebar.books_and_content');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->translateLabel()
+                    ->label(__('author.name'))
                     ->required()
                     ->maxLength(191),
+
                 FileUpload::make('avatar')
-                    ->translateLabel()
+                    ->label(__('author.avatar'))
                     ->directory('authors')
                     ->image()
                     ->imageEditor()
                     ->imageResizeMode('cover')
                     ->imageCropAspectRatio('1:1')
-                    ->default(null),
-                Forms\Components\Textarea::make('bio')
-                    ->columnSpanFull(),
+                    ->default(''),
 
+                Forms\Components\Textarea::make('bio')
+                    ->label(__('author.bio'))
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -47,23 +63,30 @@ class AuthorResource extends Resource
             ->columns([
 
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('author.name'))
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('bio')
+                    ->label(__('author.bio'))
                     ->wrap()
                     ->searchable(),
 
                 Tables\Columns\ImageColumn::make('avatar')
+                    ->label(__('author.avatar'))
                     ->circular(),
 
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('author.created_at'))
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: false),
+
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('author.updated_at'))
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: false),
+
             ])
             ->filters([
                 //

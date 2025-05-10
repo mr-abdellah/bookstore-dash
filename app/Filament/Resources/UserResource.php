@@ -3,75 +3,101 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-user';
-    protected static ?string $navigationGroup = 'Users & Access';
-    protected static ?int $navigationSort = 1;
 
+    public static function getLabel(): ?string
+    {
+        return __('sidebar.users');
+    }
 
+    public static function getPluralLabel(): ?string
+    {
+        return __('sidebar.users');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('sidebar.users_and_access');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\FileUpload::make('avatar')
+                FileUpload::make('avatar')
+                    ->label(fn() => __('user.avatar'))
                     ->image()
                     ->directory('avatars')
                     ->preserveFilenames()
                     ->default(null)
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('first_name')
+
+                TextInput::make('first_name')
+                    ->label(fn() => __('user.first_name'))
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('last_name')
+
+                TextInput::make('last_name')
+                    ->label(fn() => __('user.last_name'))
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('email')
+
+                TextInput::make('email')
+                    ->label(fn() => __('user.email'))
                     ->email()
                     ->required()
                     ->maxLength(191),
 
-                Forms\Components\DateTimePicker::make('email_verified_at')
+                DateTimePicker::make('email_verified_at')
+                    ->label(fn() => __('user.email_verified_at'))
                     ->native(false)
-                    ->required()
                     ->hiddenOn('create'),
 
-                Forms\Components\TextInput::make('phone')
+                TextInput::make('phone')
+                    ->label(fn() => __('user.phone'))
                     ->tel()
                     ->maxLength(191)
                     ->default(null),
 
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(191),
+                TextInput::make('password')
+                    ->label(fn() => __('user.password'))
+                    ->dehydrateStateUsing(fn($state) => Hash::make($state))
+                    ->dehydrated(fn($state) => filled($state))
+                    ->required(fn(string $context): bool => $context === 'create'),
 
-                Forms\Components\TextInput::make('status')
+                TextInput::make('status')
+                    ->label(fn() => __('user.status'))
                     ->required()
                     ->maxLength(191)
-                    ->default('active'),
+                    ->default(__('user.active')),
 
-                Forms\Components\Select::make('role')
+                Select::make('role')
+                    ->label(fn() => __('user.role'))
                     ->required()
                     ->native(false)
                     ->options([
-                        'admin' => 'Admin',
-                        'user' => 'User',
+                        'admin' => __('user.admin'),
+                        'user' => __('user.user_role'),
                     ])
                     ->default('user'),
-
             ]);
     }
 
@@ -79,37 +105,56 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('first_name')
+                TextColumn::make('first_name')
+                    ->label(fn() => __('user.first_name'))
                     ->searchable()
                     ->placeholder('N/A'),
-                Tables\Columns\TextColumn::make('last_name')
+
+                TextColumn::make('last_name')
+                    ->label(fn() => __('user.last_name'))
                     ->searchable()
                     ->placeholder('N/A'),
-                Tables\Columns\TextColumn::make('email')
+
+                TextColumn::make('email')
+                    ->label(fn() => __('user.email'))
                     ->searchable()
                     ->placeholder('N/A'),
-                Tables\Columns\TextColumn::make('email_verified_at')
+
+                TextColumn::make('email_verified_at')
+                    ->label(fn() => __('user.email_verified_at'))
                     ->dateTime()
                     ->sortable()
                     ->placeholder('N/A'),
-                Tables\Columns\TextColumn::make('phone')
+
+                TextColumn::make('phone')
+                    ->label(fn() => __('user.phone'))
                     ->searchable()
                     ->placeholder('N/A'),
-                Tables\Columns\TextColumn::make('status')
+
+                TextColumn::make('status')
+                    ->label(fn() => __('user.status'))
                     ->searchable()
                     ->placeholder('N/A'),
-                Tables\Columns\TextColumn::make('role')
+
+                TextColumn::make('role')
+                    ->label(fn() => __('user.role'))
                     ->searchable()
                     ->placeholder('N/A'),
-                Tables\Columns\ImageColumn::make('avatar')
+
+                ImageColumn::make('avatar')
+                    ->label(fn() => __('user.avatar'))
                     ->square()
                     ->placeholder('N/A'),
-                Tables\Columns\TextColumn::make('created_at')
+
+                TextColumn::make('created_at')
+                    ->label(fn() => __('user.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->placeholder('N/A'),
-                Tables\Columns\TextColumn::make('updated_at')
+
+                TextColumn::make('updated_at')
+                    ->label(fn() => __('user.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -119,11 +164,11 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

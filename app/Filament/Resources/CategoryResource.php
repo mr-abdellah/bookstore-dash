@@ -4,35 +4,56 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Models\Category;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
 
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
-
-
     protected static ?string $navigationIcon = 'heroicon-o-tag';
-    protected static ?string $navigationGroup = 'Books & Content';
+
+    public static function getLabel(): ?string
+    {
+        return __('sidebar.categories');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('sidebar.categories');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('sidebar.books_and_content');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name_en')
+                TextInput::make('name_en')
+                    ->label(fn() => __('category.name_en'))
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('name_fr')
+
+                TextInput::make('name_fr')
+                    ->label(fn() => __('category.name_fr'))
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('name_ar')
+
+                TextInput::make('name_ar')
+                    ->label(fn() => __('category.name_ar'))
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('slug')
+
+                TextInput::make('slug')
+                    ->label(fn() => __('category.slug'))
                     ->required()
                     ->maxLength(191),
             ]);
@@ -42,20 +63,28 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('name_en')
+                    ->label(fn() => __('category.name_en'))
+                    ->searchable(),
 
-                Tables\Columns\TextColumn::make('name_en')
+                TextColumn::make('name_fr')
+                    ->label(fn() => __('category.name_fr'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('name_fr')
+
+                TextColumn::make('name_ar')
+                    ->label(fn() => __('category.name_ar'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('name_ar')
+
+                TextColumn::make('slug')
+                    ->label(fn() => __('category.slug'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -64,11 +93,11 @@ class CategoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

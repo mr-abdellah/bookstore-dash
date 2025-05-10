@@ -3,21 +3,36 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ReviewResource\Pages;
-use App\Filament\Resources\ReviewResource\RelationManagers;
 use App\Models\Review;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
 
 class ReviewResource extends Resource
 {
     protected static ?string $model = Review::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
-    protected static ?string $navigationGroup = 'User Interaction';
+
+    public static function getLabel(): ?string
+    {
+        return __('sidebar.reviews');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('sidebar.reviews');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('sidebar.user_interaction');
+    }
 
     public static function canCreate(): bool
     {
@@ -28,19 +43,28 @@ class ReviewResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
+                TextInput::make('user_id')
+                    ->label(fn() => __('review.user_id'))
                     ->required()
                     ->maxLength(36),
-                Forms\Components\TextInput::make('reviewable_type')
+
+                TextInput::make('reviewable_type')
+                    ->label(fn() => __('review.reviewable_type'))
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('reviewable_id')
+
+                TextInput::make('reviewable_id')
+                    ->label(fn() => __('review.reviewable_id'))
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('rating')
+
+                TextInput::make('rating')
+                    ->label(fn() => __('review.rating'))
                     ->required()
                     ->numeric(),
-                Forms\Components\Textarea::make('comment')
+
+                Textarea::make('comment')
+                    ->label(fn() => __('review.comment'))
                     ->columnSpanFull(),
             ]);
     }
@@ -49,22 +73,34 @@ class ReviewResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('user_id')
+                    ->label(fn() => __('review.user_id'))
+                    ->searchable(),
 
-                Tables\Columns\TextColumn::make('user_id')
+                TextColumn::make('reviewable_type')
+                    ->label(fn() => __('review.reviewable_type'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('reviewable_type')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('reviewable_id')
+
+                TextColumn::make('reviewable_id')
+                    ->label(fn() => __('review.reviewable_id'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rating')
+
+                TextColumn::make('rating')
+                    ->label(fn() => __('review.rating'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+
+                TextColumn::make('comment')
+                    ->label(fn() => __('review.comment'))
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -73,11 +109,11 @@ class ReviewResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

@@ -4,54 +4,101 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages;
 use App\Models\Order;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
 
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
-    protected static ?string $navigationGroup = 'Orders & Sales';
+
+    public static function getLabel(): ?string
+    {
+        return __('sidebar.orders');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('sidebar.orders');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('sidebar.orders_and_sales');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->maxLength(36),
-                Forms\Components\TextInput::make('first_name')
+                Select::make('user_id')
+                    ->label(fn() => __('order.user_id'))
+                    ->relationship('user', 'first_name')
+                    ->searchable()
+                    ->preload()
+                    ->nullable(),
+
+                TextInput::make('first_name')
+                    ->label(fn() => __('order.first_name'))
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('last_name')
+
+                TextInput::make('last_name')
+                    ->label(fn() => __('order.last_name'))
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('phone')
+
+                TextInput::make('phone')
+                    ->label(fn() => __('order.phone'))
                     ->tel()
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('wilaya')
+
+                TextInput::make('wilaya')
+                    ->label(fn() => __('order.wilaya'))
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('commune')
+
+                TextInput::make('commune')
+                    ->label(fn() => __('order.commune'))
                     ->required()
                     ->maxLength(191),
-                Forms\Components\Textarea::make('address')
+
+                Textarea::make('address')
+                    ->label(fn() => __('order.address'))
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('delivery_type_id')
-                    ->required()
-                    ->maxLength(36),
-                Forms\Components\TextInput::make('total')
+
+                Select::make('delivery_type_id')
+                    ->label(fn() => __('order.delivery_type_id'))
+                    ->relationship('deliveryType', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->nullable(),
+
+                TextInput::make('total')
+                    ->label(fn() => __('order.total'))
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('status')
+
+                Select::make('status')
+                    ->label(fn() => __('order.status'))
+                    ->options([
+                        'pending' => 'Pending',
+                        'processing' => 'Processing',
+                        'shipped' => 'Shipped',
+                        'delivered' => 'Delivered',
+                        'cancelled' => 'Cancelled'
+                    ])
                     ->required()
-                    ->maxLength(191)
                     ->default('pending'),
             ]);
     }
@@ -60,31 +107,53 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('user_id')
+                    ->label(fn() => __('order.user_id'))
+                    ->searchable(),
 
-                Tables\Columns\TextColumn::make('user_id')
+                TextColumn::make('first_name')
+                    ->label(fn() => __('order.first_name'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('first_name')
+
+                TextColumn::make('last_name')
+                    ->label(fn() => __('order.last_name'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('last_name')
+
+                TextColumn::make('phone')
+                    ->label(fn() => __('order.phone'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('phone')
+
+                TextColumn::make('wilaya')
+                    ->label(fn() => __('order.wilaya'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('wilaya')
+
+                TextColumn::make('commune')
+                    ->label(fn() => __('order.commune'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('commune')
+
+                TextColumn::make('address')
+                    ->label(fn() => __('order.address'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('delivery_type_id')
+
+                TextColumn::make('delivery_type_id')
+                    ->label(fn() => __('order.delivery_type_id'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('total')
+
+                TextColumn::make('total')
+                    ->label(fn() => __('order.total'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+
+                TextColumn::make('status')
+                    ->label(fn() => __('order.status'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -93,11 +162,11 @@ class OrderResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

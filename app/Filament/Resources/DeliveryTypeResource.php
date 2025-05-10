@@ -3,36 +3,57 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\DeliveryTypeResource\Pages;
-use App\Filament\Resources\DeliveryTypeResource\RelationManagers;
 use App\Models\DeliveryType;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
 
 class DeliveryTypeResource extends Resource
 {
     protected static ?string $model = DeliveryType::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-truck';
-    protected static ?string $navigationGroup = 'Orders & Sales';
+
+    public static function getLabel(): ?string
+    {
+        return __('sidebar.delivery_types');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('sidebar.delivery_types');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('sidebar.orders_and_sales');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
+                    ->label(fn() => __('delivery_type.name'))
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('logo_url')
+
+                TextInput::make('logo_url')
+                    ->label(fn() => __('delivery_type.logo_url'))
                     ->maxLength(191)
                     ->default(null),
-                Forms\Components\TextInput::make('api_code')
+
+                TextInput::make('api_code')
+                    ->label(fn() => __('delivery_type.api_code'))
                     ->maxLength(191)
                     ->default(null),
-                Forms\Components\TextInput::make('estimated_delay')
+
+                TextInput::make('estimated_delay')
+                    ->label(fn() => __('delivery_type.estimated_delay'))
                     ->numeric()
                     ->default(null),
             ]);
@@ -42,21 +63,29 @@ class DeliveryTypeResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('name')
+                    ->label(fn() => __('delivery_type.name'))
+                    ->searchable(),
 
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('logo_url')
+                    ->label(fn() => __('delivery_type.logo_url'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('logo_url')
+
+                TextColumn::make('api_code')
+                    ->label(fn() => __('delivery_type.api_code'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('api_code')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('estimated_delay')
+
+                TextColumn::make('estimated_delay')
+                    ->label(fn() => __('delivery_type.estimated_delay'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -65,11 +94,11 @@ class DeliveryTypeResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

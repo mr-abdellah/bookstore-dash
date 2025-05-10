@@ -5,74 +5,106 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PublishingHouseResource\Pages;
 use App\Models\PublishingHouse;
 use App\Models\User;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
 
 class PublishingHouseResource extends Resource
 {
     protected static ?string $model = PublishingHouse::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-building-library';
-    protected static ?string $navigationGroup = 'Books & Content';
+
+    public static function getLabel(): ?string
+    {
+        return __('sidebar.publishing_houses');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('sidebar.publishing_houses');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('sidebar.books_and_content');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('owner_id')
-                    ->label('Owner')
+                Select::make('owner_id')
+                    ->label(fn() => __('publishing_house.owner'))
                     ->relationship('owner', 'first_name')
                     ->getOptionLabelFromRecordUsing(fn(User $record) => "{$record->first_name} {$record->last_name}")
                     ->searchable(['first_name', 'last_name', 'email'])
                     ->preload()
                     ->required(),
-                Forms\Components\TextInput::make('name')
+
+                TextInput::make('name')
+                    ->label(fn() => __('publishing_house.name'))
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('email')
+
+                TextInput::make('email')
+                    ->label(fn() => __('publishing_house.email'))
                     ->email()
                     ->maxLength(191)
                     ->default(null),
-                Forms\Components\TextInput::make('phone')
+
+                TextInput::make('phone')
+                    ->label(fn() => __('publishing_house.phone'))
                     ->tel()
                     ->maxLength(191)
                     ->default(null),
-                Forms\Components\TextInput::make('address')
-                    ->maxLength(191)
-                    ->default(null),
-                Forms\Components\TextInput::make('website')
+
+                TextInput::make('address')
+                    ->label(fn() => __('publishing_house.address'))
                     ->maxLength(191)
                     ->default(null),
 
+                TextInput::make('website')
+                    ->label(fn() => __('publishing_house.website'))
+                    ->maxLength(191)
+                    ->default(null),
 
-                Forms\Components\Select::make('status')
+                Select::make('status')
+                    ->label(fn() => __('publishing_house.status'))
                     ->options([
-                        'active' => 'Active',
-                        'inactive' => 'Inactive',
+                        'active' => __('publishing_house.active'),
+                        'inactive' => __('publishing_house.inactive'),
                     ])
                     ->native(false),
 
-                Forms\Components\DatePicker::make('established_year')
+                DatePicker::make('established_year')
+                    ->label(fn() => __('publishing_house.established_year'))
                     ->native(false),
 
-                Forms\Components\FileUpload::make('logo')
-                    ->image()
+                FileUpload::make('logo')
+                    ->label(fn() => __('publishing_house.logo'))
                     ->image()
                     ->imageEditor()
                     ->imageResizeMode('cover')
-                    // ->imageCropAspectRatio('1:1')
                     ->directory('publishing-houses')
                     ->default(null)
                     ->columnSpanFull(),
 
-
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
+                    ->label(fn() => __('publishing_house.description'))
                     ->columnSpanFull(),
-                Forms\Components\Textarea::make('social_links')
+
+                Textarea::make('social_links')
+                    ->label(fn() => __('publishing_house.social_links'))
                     ->columnSpanFull(),
             ]);
     }
@@ -81,33 +113,48 @@ class PublishingHouseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('logo')
+                ImageColumn::make('logo')
+                    ->label(fn() => __('publishing_house.logo'))
                     ->circular(),
-                Tables\Columns\TextColumn::make('owner.first_name')
-                    ->label('Owner')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('phone')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('address')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('website')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('status')
+
+                TextColumn::make('owner.first_name')
+                    ->label(fn() => __('publishing_house.owner'))
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('established_year')
+                TextColumn::make('name')
+                    ->label(fn() => __('publishing_house.name'))
+                    ->searchable(),
+
+                TextColumn::make('email')
+                    ->label(fn() => __('publishing_house.email'))
+                    ->searchable(),
+
+                TextColumn::make('phone')
+                    ->label(fn() => __('publishing_house.phone'))
+                    ->searchable(),
+
+                TextColumn::make('address')
+                    ->label(fn() => __('publishing_house.address'))
+                    ->searchable(),
+
+                TextColumn::make('website')
+                    ->label(fn() => __('publishing_house.website'))
+                    ->searchable(),
+
+                TextColumn::make('status')
+                    ->label(fn() => __('publishing_house.status'))
+                    ->searchable(),
+
+                TextColumn::make('established_year')
+                    ->label(fn() => __('publishing_house.established_year'))
                     ->badge(),
 
-
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -116,11 +163,11 @@ class PublishingHouseResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

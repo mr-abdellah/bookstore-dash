@@ -3,6 +3,17 @@
 namespace App\Providers\Filament;
 
 
+use App\Filament\Widgets\CustomerRetentionWidget;
+use App\Filament\Widgets\EarningsChartWidget;
+use App\Filament\Widgets\EarningsOverviewWidget;
+use App\Filament\Widgets\EarningsTableWidget;
+use App\Filament\Widgets\InventoryTurnoverWidget;
+use App\Filament\Widgets\MonthlyOrderTrendWidget;
+use App\Filament\Widgets\PublishingHousePerformanceWidget;
+use App\Filament\Widgets\StockAtRiskWidget;
+use App\Filament\Widgets\TopSellingBooksWidget;
+use App\Filament\Widgets\TotalRevenueWidget;
+use App\Filament\Widgets\UserEngagementWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -33,19 +44,26 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->profile()
             ->colors([
                 'primary' => Color::Green,
             ])
+            ->maxContentWidth('full')
+            ->brandName('Kotobi')
+            ->favicon(asset('favicon.ico'))
+            ->brandLogo(asset('logo.svg'))
+            ->brandLogoHeight('3rem')
             ->font(app()->getLocale() === 'ar' ? 'Cairo' : 'Poppins')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->pages([
-                Pages\Dashboard::class,
-            ])
+            ->pages([])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                EarningsOverviewWidget::class,
+                EarningsChartWidget::class,
+                InventoryTurnoverWidget::class,
+                CustomerRetentionWidget::class,
+                EarningsTableWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

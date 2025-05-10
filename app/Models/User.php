@@ -4,15 +4,17 @@ namespace App\Models;
 
 use App\Traits\UuidTrait;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Filament\Panel;
 use Filament\Models\Contracts\HasName;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use TomatoPHP\FilamentLanguageSwitcher\Traits\InteractsWithLanguages;
 
-class User extends Authenticatable implements FilamentUser, HasName
+class User extends Authenticatable implements FilamentUser, HasName, HasAvatar
 {
-    use UuidTrait, Notifiable, InteractsWithLanguages;
+    use UuidTrait, Notifiable, InteractsWithLanguages, HasFactory;
 
     public $incrementing = false;
     protected $keyType = 'string';
@@ -39,6 +41,12 @@ class User extends Authenticatable implements FilamentUser, HasName
     {
         return "{$this->first_name} {$this->last_name}";
     }
+
+    public function getFilamentAvatarUrl(): string
+    {
+        return asset('storage/' . $this->avatar);
+    }
+
 
     // Relationships
     public function orders()

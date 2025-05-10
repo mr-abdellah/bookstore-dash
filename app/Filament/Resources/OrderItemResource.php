@@ -4,34 +4,56 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderItemResource\Pages;
 use App\Models\OrderItem;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
 
 class OrderItemResource extends Resource
 {
     protected static ?string $model = OrderItem::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-receipt-percent';
-    protected static ?string $navigationGroup = 'Orders & Sales';
+
+    public static function getLabel(): ?string
+    {
+        return __('sidebar.order_items');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('sidebar.order_items');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('sidebar.orders_and_sales');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('order_id')
+                TextInput::make('order_id')
+                    ->label(fn() => __('order_item.order_id'))
                     ->required()
                     ->maxLength(36),
-                Forms\Components\TextInput::make('book_id')
+
+                TextInput::make('book_id')
+                    ->label(fn() => __('order_item.book_id'))
                     ->required()
                     ->maxLength(36),
-                Forms\Components\TextInput::make('quantity')
+
+                TextInput::make('quantity')
+                    ->label(fn() => __('order_item.quantity'))
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('unit_price')
+
+                TextInput::make('unit_price')
+                    ->label(fn() => __('order_item.unit_price'))
                     ->required()
                     ->numeric(),
             ]);
@@ -41,22 +63,30 @@ class OrderItemResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('order_id')
+                    ->label(fn() => __('order_item.order_id'))
+                    ->searchable(),
 
-                Tables\Columns\TextColumn::make('order_id')
+                TextColumn::make('book_id')
+                    ->label(fn() => __('order_item.book_id'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('book_id')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('quantity')
+
+                TextColumn::make('quantity')
+                    ->label(fn() => __('order_item.quantity'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('unit_price')
+
+                TextColumn::make('unit_price')
+                    ->label(fn() => __('order_item.unit_price'))
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -65,11 +95,11 @@ class OrderItemResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
