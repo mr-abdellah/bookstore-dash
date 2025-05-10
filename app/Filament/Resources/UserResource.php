@@ -26,6 +26,12 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\FileUpload::make('avatar')
+                    ->image()
+                    ->directory('avatars')
+                    ->preserveFilenames()
+                    ->default(null)
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('first_name')
                     ->required()
                     ->maxLength(191),
@@ -36,26 +42,36 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(191),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
+
+                Forms\Components\DateTimePicker::make('email_verified_at')
+                    ->native(false)
+                    ->required()
+                    ->hiddenOn('create'),
+
                 Forms\Components\TextInput::make('phone')
                     ->tel()
                     ->maxLength(191)
                     ->default(null),
+
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->required()
                     ->maxLength(191),
+
                 Forms\Components\TextInput::make('status')
                     ->required()
                     ->maxLength(191)
                     ->default('active'),
-                Forms\Components\TextInput::make('role')
+
+                Forms\Components\Select::make('role')
                     ->required()
-                    ->maxLength(191)
+                    ->native(false)
+                    ->options([
+                        'admin' => 'Admin',
+                        'user' => 'User',
+                    ])
                     ->default('user'),
-                Forms\Components\TextInput::make('avatar')
-                    ->maxLength(191)
-                    ->default(null),
+
             ]);
     }
 
@@ -63,32 +79,41 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-
                 Tables\Columns\TextColumn::make('first_name')
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('last_name')
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('phone')
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('role')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('avatar')
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A'),
+                Tables\Columns\ImageColumn::make('avatar')
+                    ->square()
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->placeholder('N/A'),
             ])
             ->filters([
                 //

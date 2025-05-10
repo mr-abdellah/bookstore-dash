@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,7 +22,26 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Fix for MySQL older than 5.7.7 and MariaDB with utf8mb4 encoding
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch
+                ->locales(['ar', 'en', 'fr'])
+                ->displayLocale('en') // Show locale names in English (optional)
+                ->labels([
+                    'en' => 'English',
+                    'fr' => 'Français',
+                    'ar' => 'العربية',
+                ])
+                ->flags([
+                    'ar' => asset('flags/ar.png'),
+                    'fr' => asset('flags/fr.png'),
+                    'en' => asset('flags/en.png'),
+                ])
+                ->visible(
+                    insidePanels: true,
+                    outsidePanels: false // You don’t need this unless you have frontend pages
+                )
+                ->renderHook('panels::global-search.after'); // Position in Filament header
+        });
         Schema::defaultStringLength(191);
     }
 }

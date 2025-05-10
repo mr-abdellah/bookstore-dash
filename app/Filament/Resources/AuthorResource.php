@@ -24,9 +24,11 @@ class AuthorResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->translateLabel()
                     ->required()
                     ->maxLength(191),
                 FileUpload::make('avatar')
+                    ->translateLabel()
                     ->directory('authors')
                     ->image()
                     ->imageEditor()
