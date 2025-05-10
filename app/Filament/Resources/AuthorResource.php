@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\AuthorResource\Pages;
 use App\Models\Author;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -25,11 +26,16 @@ class AuthorResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(191),
+                FileUpload::make('avatar')
+                    ->directory('authors')
+                    ->image()
+                    ->imageEditor()
+                    ->imageResizeMode('cover')
+                    ->imageCropAspectRatio('1:1')
+                    ->default(null),
                 Forms\Components\Textarea::make('bio')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('avatar')
-                    ->maxLength(191)
-                    ->default(null),
+
             ]);
     }
 
@@ -37,13 +43,17 @@ class AuthorResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('avatar')
+
+                Tables\Columns\TextColumn::make('bio')
+                    ->wrap()
                     ->searchable(),
+
+                Tables\Columns\ImageColumn::make('avatar')
+                    ->circular(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

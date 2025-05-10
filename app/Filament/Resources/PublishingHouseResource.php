@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PublishingHouseResource\Pages;
 use App\Models\PublishingHouse;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -22,9 +23,13 @@ class PublishingHouseResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('owner_id')
-                    ->required()
-                    ->maxLength(36),
+                Forms\Components\Select::make('owner_id')
+                    ->label('Owner')
+                    ->relationship('owner', 'first_name')
+                    ->getOptionLabelFromRecordUsing(fn(User $record) => "{$record->first_name} {$record->last_name}")
+                    ->searchable(['first_name', 'last_name', 'email'])
+                    ->preload()
+                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(191),
@@ -42,14 +47,29 @@ class PublishingHouseResource extends Resource
                 Forms\Components\TextInput::make('website')
                     ->maxLength(191)
                     ->default(null),
-                Forms\Components\TextInput::make('status')
-                    ->required()
-                    ->maxLength(191)
-                    ->default('active'),
-                Forms\Components\TextInput::make('established_year'),
-                Forms\Components\TextInput::make('logo_url')
-                    ->maxLength(191)
-                    ->default(null),
+
+
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'active' => 'Active',
+                        'inactive' => 'Inactive',
+                    ])
+                    ->native(false),
+
+                Forms\Components\DatePicker::make('established_year')
+                    ->native(false),
+
+                Forms\Components\FileUpload::make('logo')
+                    ->image()
+                    ->image()
+                    ->imageEditor()
+                    ->imageResizeMode('cover')
+                    // ->imageCropAspectRatio('1:1')
+                    ->directory('publishing-houses')
+                    ->default(null)
+                    ->columnSpanFull(),
+
+
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('social_links')
@@ -61,10 +81,10 @@ class PublishingHouseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('owner_id')
+                Tables\Columns\ImageColumn::make('logo')
+                    ->circular(),
+                Tables\Columns\TextColumn::make('owner.first_name')
+                    ->label('Owner')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
@@ -78,9 +98,11 @@ class PublishingHouseResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('established_year'),
-                Tables\Columns\TextColumn::make('logo_url')
-                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('established_year')
+                    ->badge(),
+
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

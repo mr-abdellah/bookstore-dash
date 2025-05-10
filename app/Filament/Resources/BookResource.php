@@ -4,7 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BookResource\Pages;
 use App\Filament\Resources\BookResource\RelationManagers;
+use App\Models\Author;
 use App\Models\Book;
+use App\Models\Category;
+use App\Models\Discount;
+use App\Models\PublishingHouse;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -22,18 +26,30 @@ class BookResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('author_id')
-                    ->required()
-                    ->maxLength(36),
-                Forms\Components\TextInput::make('category_id')
-                    ->required()
-                    ->maxLength(36),
-                Forms\Components\TextInput::make('publishing_house_id')
-                    ->maxLength(36)
-                    ->default(null),
-                Forms\Components\TextInput::make('discount_id')
-                    ->maxLength(36)
-                    ->default(null),
+                Forms\Components\Select::make('author_id')
+                    ->label('Author')
+                    ->relationship('author', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                Forms\Components\Select::make('category_id')
+                    ->label('Category')
+                    ->relationship('category', 'name_en')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                Forms\Components\Select::make('publishing_house_id')
+                    ->label('Publishing House')
+                    ->relationship('publishingHouse', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->nullable(),
+                Forms\Components\Select::make('discount_id')
+                    ->label('Discount')
+                    ->relationship('discount', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->nullable(),
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(191),
@@ -42,17 +58,54 @@ class BookResource extends Resource
                 Forms\Components\TextInput::make('price')
                     ->required()
                     ->numeric()
-                    ->prefix('$'),
-                Forms\Components\TextInput::make('language')
-                    ->maxLength(191)
-                    ->default(null),
+                    ->suffix('DA'),
+
+                Forms\Components\Select::make('language')
+                    ->options([
+                        'English' => 'English',
+                        'French' => 'French',
+                        'Arabic' => 'Arabic',
+                        'Spanish' => 'Spanish',
+                        'German' => 'German',
+                        'Chinese' => 'Chinese',
+                        'Japanese' => 'Japanese',
+                        'Russian' => 'Russian',
+                        'Portuguese' => 'Portuguese',
+                        'Italian' => 'Italian',
+                        'Hindi' => 'Hindi',
+                        'Korean' => 'Korean',
+                        'Turkish' => 'Turkish',
+                        'Polish' => 'Polish',
+                        'Dutch' => 'Dutch',
+                        'Swedish' => 'Swedish',
+                        'Persian' => 'Persian',
+                        'Indonesian' => 'Indonesian',
+                        'Malay' => 'Malay',
+                        'Hebrew' => 'Hebrew',
+                        'Ukrainian' => 'Ukrainian',
+                        'Vietnamese' => 'Vietnamese',
+                        'Thai' => 'Thai',
+                        'Romanian' => 'Romanian',
+                        'Czech' => 'Czech',
+                        'Hungarian' => 'Hungarian',
+                        'Greek' => 'Greek',
+                        'Bengali' => 'Bengali',
+                        'Tamil' => 'Tamil',
+                        'Urdu' => 'Urdu',
+                    ])
+                    ->searchable()
+                    ->required(),
                 Forms\Components\TextInput::make('dimensions')
                     ->maxLength(191)
+                    ->hint('Format: Width x Height x Depth')
                     ->default(null),
                 Forms\Components\TextInput::make('pages_count')
                     ->numeric()
                     ->default(null),
-                Forms\Components\Textarea::make('images')
+                Forms\Components\FileUpload::make('images')
+                    ->multiple()
+                    ->image()
+                    ->imageEditor()
                     ->columnSpanFull(),
             ]);
     }
@@ -61,37 +114,50 @@ class BookResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('author_id')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('category_id')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('publishing_house_id')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('discount_id')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('author.name')
+                    ->label('Author')
+                    ->searchable()
+                    ->placeholder('N/A'),
+                Tables\Columns\TextColumn::make('category.name_en')
+                    ->label('Category')
+                    ->searchable()
+                    ->placeholder('N/A'),
+                Tables\Columns\TextColumn::make('publishingHouse.name')
+                    ->label('Publishing House')
+                    ->searchable()
+                    ->placeholder('N/A'),
+                Tables\Columns\TextColumn::make('discount.name')
+                    ->label('Discount')
+                    ->searchable()
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('price')
                     ->money()
-                    ->sortable(),
+                    ->sortable()
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('language')
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('dimensions')
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('pages_count')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->placeholder('N/A'),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->placeholder('N/A'),
+
             ])
             ->filters([
                 //

@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('website')->nullable();
             $table->string('status')->default('active');
-            $table->year('established_year')->nullable();
-            $table->string('logo_url')->nullable();
+            $table->date('established_year')->nullable();
+            $table->string('logo')->nullable();
             $table->text('description')->nullable();
             $table->json('social_links')->nullable();
             $table->timestamps();

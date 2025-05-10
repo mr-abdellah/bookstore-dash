@@ -16,7 +16,7 @@ class StockResource extends Resource
     protected static ?string $model = Stock::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cube';
-    protected static ?string $navigationGroup = 'Books & Content';
+    protected static ?string $navigationGroup = 'Orders & Sales';
 
     public static function form(Form $form): Form
     {
@@ -36,9 +36,7 @@ class StockResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('book_id')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('quantity')

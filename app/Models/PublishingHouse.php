@@ -20,7 +20,7 @@ class PublishingHouse extends Model
         'address',
         'website',
         'established_year',
-        'logo_url',
+        'logo',
         'description',
         'social_links',
         'status',
