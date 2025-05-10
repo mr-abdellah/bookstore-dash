@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('order_items', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('order_id')->index();
-            $table->uuid('book_id')->index();
+            $table->uuid('book_id')->nullable()->index();
             $table->unsignedInteger('quantity');
             $table->decimal('unit_price', 10, 2);
             $table->timestamps();
