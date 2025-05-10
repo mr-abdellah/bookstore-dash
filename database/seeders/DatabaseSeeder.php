@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\PlatformSettings;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,10 +14,11 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        DB::table('platform_settings')->insert([
-            'profit_percentage' => 10.00,
+        PlatformSettings::create([
+            'id' => (string) \Illuminate\Support\Str::uuid(),
+            'profit_percentage' => 10,
             'platform_name' => 'My Book Store',
-            'logo' => null,
+            'logo' => 'logo.png',
             'contact_email' => 'admin@example.com',
             'contact_phone' => '+123456789',
         ]);
