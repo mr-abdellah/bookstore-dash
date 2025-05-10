@@ -16,13 +16,11 @@ return new class extends Migration {
             $table->string('wilaya');
             $table->string('commune');
             $table->text('address');
-            $table->uuid('delivery_type_id')->index();
             $table->decimal('total', 10, 2);
             $table->string('status')->default('pending');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->foreign('delivery_type_id')->references('id')->on('delivery_types')->nullOnDelete();
         });
     }
 
