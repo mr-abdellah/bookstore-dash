@@ -8,10 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Filament\Panel;
 use Filament\Models\Contracts\HasName;
+use TomatoPHP\FilamentLanguageSwitcher\Traits\InteractsWithLanguages;
 
 class User extends Authenticatable implements FilamentUser, HasName
 {
-    use UuidTrait, Notifiable;
+    use UuidTrait, Notifiable, InteractsWithLanguages;
 
     public $incrementing = false;
     protected $keyType = 'string';

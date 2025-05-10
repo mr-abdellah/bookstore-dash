@@ -2,46 +2,33 @@
 
 namespace App\Providers;
 
+use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
-
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
-            $switch
-                ->locales(['ar', 'en', 'fr'])
-                ->displayLocale('en') // Show locale names in English (optional)
-                ->labels([
-                    'en' => 'English',
-                    'fr' => 'Français',
-                    'ar' => 'العربية',
-                ])
-                ->flags([
-                    'ar' => asset('flags/ar.png'),
-                    'fr' => asset('flags/fr.png'),
-                    'en' => asset('flags/en.png'),
-                ])
-                ->visible(
-                    insidePanels: true,
-                    outsidePanels: false // You don’t need this unless you have frontend pages
-                )
-                ->renderHook('panels::global-search.after'); // Position in Filament header
-        });
+        FilamentView::registerRenderHook(
+            'panels::head.end',
+            fn(): string => <<<'HTML'
+            <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+            <style>
+                html {
+                    font-family: 'Inter', sans-serif !important;
+                }
+                html[dir="rtl"] {
+                    font-family: 'Cairo', sans-serif !important;
+                }
+            </style>
+            HTML
+        );
         Schema::defaultStringLength(191);
     }
 }
