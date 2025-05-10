@@ -77,13 +77,6 @@ class OrderResource extends Resource
                     ->required()
                     ->columnSpanFull(),
 
-                Select::make('delivery_type_id')
-                    ->label(fn() => __('order.delivery_type_id'))
-                    ->relationship('deliveryType', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->nullable(),
-
                 TextInput::make('total')
                     ->label(fn() => __('order.total'))
                     ->required()

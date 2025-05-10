@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\DeliveryType;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -114,7 +113,6 @@ class OrderFactory extends Factory
             'wilaya' => $this->faker->randomElement($wilayas),
             'commune' => $this->faker->randomElement($communes),
             'address' => $this->faker->streetAddress(),
-            'delivery_type_id' => DeliveryType::factory(),
             'total' => 0, // Updated by FakePopulateCommand
             'status' => $this->faker->randomElement(['pending', 'processing', 'shipped', 'delivered', 'completed']),
             'created_at' => $this->faker->dateTimeBetween('-6 months', 'now'),

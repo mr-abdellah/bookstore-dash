@@ -35,11 +35,6 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function deliveryType()
-    {
-        return $this->belongsTo(DeliveryType::class);
-    }
-
     public function items()
     {
         return $this->hasMany(OrderItem::class);

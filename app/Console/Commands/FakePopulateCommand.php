@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
-use App\Models\DeliveryType;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PublishingHouse;
@@ -44,8 +43,6 @@ class FakePopulateCommand extends Command
 
         // Create Delivery Types
         $this->info('Creating delivery types...');
-        DeliveryType::factory()->count(5)->create();
-        $this->comment('Created ' . DeliveryType::count() . ' delivery types.');
 
         // Create Authors
         $this->info('Creating authors...');
@@ -97,7 +94,6 @@ class FakePopulateCommand extends Command
         Author::truncate();
         User::truncate();
         Category::truncate();
-        DeliveryType::truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
         $this->comment('Data cleared.');
     }
