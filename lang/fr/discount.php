@@ -8,4 +8,5 @@ return [
     'starts_at' => 'Débute le',
     'ends_at' => 'Finit le',
     'active' => 'Actif',
+    'publishing_house' => 'Maison d\'édition',
 ];

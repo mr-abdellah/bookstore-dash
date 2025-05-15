@@ -8,4 +8,5 @@ return [
     'starts_at' => 'Starts At',
     'ends_at' => 'Ends At',
     'active' => 'Active',
+    'publishing_house' => 'Publishing House',
 ];

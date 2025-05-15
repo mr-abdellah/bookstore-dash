@@ -21,6 +21,9 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+
+            $table->uuid('publishing_house_id')->nullable()->index();
+            $table->foreign('publishing_house_id')->references('id')->on('publishing_houses')->nullOnDelete();
         });
     }
 

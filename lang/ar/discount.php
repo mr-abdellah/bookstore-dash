@@ -8,4 +8,5 @@ return [
     'starts_at' => 'تبدأ في',
     'ends_at' => 'تنتهي في',
     'active' => 'نشط',
+    'publishing_house' => 'دار النشر',
 ];

@@ -13,7 +13,12 @@ class Author extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['name', 'bio', 'avatar'];
+    protected $fillable = ['name', 'bio', 'avatar', 'publishing_house_id'];
+
+    public function publishingHouse()
+    {
+        return $this->belongsTo(PublishingHouse::class);
+    }
 
     public function books()
     {

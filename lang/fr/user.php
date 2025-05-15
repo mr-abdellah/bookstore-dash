@@ -11,6 +11,7 @@ return [
     'status' => 'Statut',
     'role' => 'Rôle',
     'active' => 'Actif',
+    'inactive' => 'Inactif',
     'admin' => 'Administrateur',
     'user_role' => 'Utilisateur',
 ];

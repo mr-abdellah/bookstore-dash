@@ -11,4 +11,5 @@ return [
     'delivery_type_id' => 'نوع التوصيل',
     'total' => 'المجموع',
     'status' => 'الحالة',
+    'publishing_house' => 'دار النشر',
 ];

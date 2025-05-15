@@ -83,11 +83,15 @@ class UserResource extends Resource
                     ->dehydrated(fn($state) => filled($state))
                     ->required(fn(string $context): bool => $context === 'create'),
 
-                TextInput::make('status')
-                    ->label(fn() => __('user.status'))
+                Select::make('status')
+                    ->label(fn() => __('user.role'))
                     ->required()
-                    ->maxLength(191)
-                    ->default(__('user.active')),
+                    ->native(false)
+                    ->options([
+                        'active' => __('user.active'),
+                        'inactive' => __('user.inactive'),
+                    ])
+                    ->default('active'),
 
                 Select::make('role')
                     ->label(fn() => __('user.role'))
@@ -134,7 +138,13 @@ class UserResource extends Resource
                 TextColumn::make('status')
                     ->label(fn() => __('user.status'))
                     ->searchable()
-                    ->placeholder('N/A'),
+                    ->placeholder('N/A')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'inactive' => 'danger',
+                        'active' => 'success',
+                    })
+                ,
 
                 TextColumn::make('role')
                     ->label(fn() => __('user.role'))

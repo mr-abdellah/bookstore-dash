@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Order;
+use App\Models\PublishingHouse;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -117,6 +118,7 @@ class OrderFactory extends Factory
             'status' => $this->faker->randomElement(['pending', 'processing', 'shipped', 'delivered', 'completed']),
             'created_at' => $this->faker->dateTimeBetween('-6 months', 'now'),
             'updated_at' => $this->faker->dateTimeBetween('-6 months', 'now'),
+            'publishing_house_id' => PublishingHouse::factory(),
         ];
     }
 }

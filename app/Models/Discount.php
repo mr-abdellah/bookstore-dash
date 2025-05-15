@@ -19,13 +19,19 @@ class Discount extends Model
         'starts_at',
         'ends_at',
         'active',
+        'publishing_house_id'
     ];
 
+    public function publishingHouse()
+    {
+        return $this->belongsTo(PublishingHouse::class);
+    }
+
     protected $casts = [
-        'percent'   => 'integer',
+        'percent' => 'integer',
         'starts_at' => 'date',
-        'ends_at'   => 'date',
-        'active'    => 'boolean',
+        'ends_at' => 'date',
+        'active' => 'boolean',
     ];
 
     public function books()

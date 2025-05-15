@@ -18,7 +18,13 @@ class Category extends Model
         'name_fr',
         'name_ar',
         'slug',
+        'publishing_house_id'
     ];
+
+    public function publishingHouse()
+    {
+        return $this->belongsTo(PublishingHouse::class);
+    }
 
     public function books()
     {

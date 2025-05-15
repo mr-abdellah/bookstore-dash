@@ -13,6 +13,7 @@ return [
     'pages_count' => 'عدد الصفحات',
     'images' => 'الصور',
 
+
     // Table Labels
     'author_name' => 'المؤلف',
     'category_name' => 'الفئة',

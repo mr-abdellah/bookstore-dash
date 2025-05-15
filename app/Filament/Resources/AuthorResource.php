@@ -6,6 +6,7 @@ use App\Filament\Resources\AuthorResource\Pages;
 use App\Models\Author;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -37,6 +38,12 @@ class AuthorResource extends Resource
     {
         return $form
             ->schema([
+                Select::make('publishing_house_id')
+                    ->label(__('author.publishing_house'))
+                    ->relationship('publishingHouse', 'name')
+                    ->searchable()
+                    ->preload(),
+
                 Forms\Components\TextInput::make('name')
                     ->label(__('author.name'))
                     ->required()
@@ -62,14 +69,23 @@ class AuthorResource extends Resource
         return $table
             ->columns([
 
+                Tables\Columns\TextColumn::make('publishingHouse.name')
+                    ->label(__('author.publishing_house'))
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false),
+
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('author.name'))
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A')
+                    ->placeholder('N/A'),
 
                 Tables\Columns\TextColumn::make('bio')
                     ->label(__('author.bio'))
                     ->wrap()
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A'),
 
                 Tables\Columns\ImageColumn::make('avatar')
                     ->label(__('author.avatar'))

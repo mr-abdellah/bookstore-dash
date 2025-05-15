@@ -15,6 +15,9 @@ return new class extends Migration {
             $table->date('starts_at')->nullable();
             $table->date('ends_at')->nullable();
             $table->boolean('active')->default(true);
+
+            $table->uuid('publishing_house_id')->nullable()->index();
+            $table->foreign('publishing_house_id')->references('id')->on('publishing_houses')->nullOnDelete();
             $table->timestamps();
         });
     }

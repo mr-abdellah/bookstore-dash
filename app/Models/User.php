@@ -10,11 +10,12 @@ use Illuminate\Notifications\Notifiable;
 use Filament\Panel;
 use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Sanctum\HasApiTokens;
 use TomatoPHP\FilamentLanguageSwitcher\Traits\InteractsWithLanguages;
 
 class User extends Authenticatable implements FilamentUser, HasName, HasAvatar
 {
-    use UuidTrait, Notifiable, InteractsWithLanguages, HasFactory;
+    use UuidTrait, Notifiable, InteractsWithLanguages, HasFactory, HasApiTokens;
 
     public $incrementing = false;
     protected $keyType = 'string';

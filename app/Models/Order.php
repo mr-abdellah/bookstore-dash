@@ -24,6 +24,7 @@ class Order extends Model
         'delivery_type_id',
         'total',
         'status',
+        'publishing_house_id'
     ];
 
     protected $casts = [
@@ -38,5 +39,10 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function publishingHouse()
+    {
+        return $this->belongsTo(PublishingHouse::class);
     }
 }

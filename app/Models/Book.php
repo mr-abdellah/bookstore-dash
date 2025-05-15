@@ -29,7 +29,7 @@ class Book extends Model
 
     protected $casts = [
         'images' => 'array',
-        'price'  => 'decimal:2',
+        'price' => 'decimal:2',
     ];
 
     // Relationships

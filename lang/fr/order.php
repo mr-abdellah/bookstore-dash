@@ -11,4 +11,5 @@ return [
     'delivery_type_id' => 'Type de Livraison',
     'total' => 'Total',
     'status' => 'Statut',
+    'publishing_house' => 'Maison d\'édition',
 ];

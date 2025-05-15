@@ -119,15 +119,18 @@ class PublishingHouseResource extends Resource
 
                 TextColumn::make('owner.first_name')
                     ->label(fn() => __('publishing_house.owner'))
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A'),
 
                 TextColumn::make('name')
                     ->label(fn() => __('publishing_house.name'))
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A'),
 
                 TextColumn::make('email')
                     ->label(fn() => __('publishing_house.email'))
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('N/A'),
 
                 TextColumn::make('phone')
                     ->label(fn() => __('publishing_house.phone'))
@@ -142,12 +145,23 @@ class PublishingHouseResource extends Resource
                     ->searchable(),
 
                 TextColumn::make('status')
-                    ->label(fn() => __('publishing_house.status'))
-                    ->searchable(),
+                    ->label(fn() => __('user.status'))
+                    ->searchable()
+                    ->placeholder('N/A')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'inactive' => 'danger',
+                        'active' => 'success',
+                    })
+                ,
 
                 TextColumn::make('established_year')
                     ->label(fn() => __('publishing_house.established_year'))
-                    ->badge(),
+                    ->badge()
+                    ->color('warning')
+                    ->date()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
                     ->dateTime()

@@ -5,4 +5,5 @@ return [
     'name_fr' => 'Nom (Français)',
     'name_ar' => 'Nom (Arabe)',
     'slug' => 'Slug',
+    'publishing_house' => 'Maison d\'édition',
 ];

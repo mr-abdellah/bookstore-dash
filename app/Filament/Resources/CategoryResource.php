@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Models\Category;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -37,6 +38,11 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
+                Select::make('publishing_house_id')
+                    ->label(__('category.publishing_house'))
+                    ->relationship('publishingHouse', 'name')
+                    ->searchable()
+                    ->preload(),
                 TextInput::make('name_en')
                     ->label(fn() => __('category.name_en'))
                     ->required()
@@ -63,6 +69,11 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('publishingHouse.name')
+                    ->label(__('category.publishing_house'))
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('name_en')
                     ->label(fn() => __('category.name_en'))
                     ->searchable(),

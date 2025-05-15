@@ -16,7 +16,13 @@ class Stock extends Model
     protected $fillable = [
         'book_id',
         'quantity',
+        'publishing_house_id'
     ];
+
+    public function publishingHouse()
+    {
+        return $this->belongsTo(PublishingHouse::class);
+    }
 
     protected $casts = [
         'quantity' => 'integer',

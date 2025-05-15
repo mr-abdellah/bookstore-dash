@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Book;
+use App\Models\PublishingHouse;
 use App\Models\Stock;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -19,6 +20,7 @@ class StockFactory extends Factory
             'quantity' => $this->faker->numberBetween(0, 100),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
             'updated_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'publishing_house_id' => PublishingHouse::factory(),
         ];
     }
 }

@@ -11,4 +11,5 @@ return [
     'delivery_type_id' => 'Delivery Type ID',
     'total' => 'Total',
     'status' => 'Status',
+    'publishing_house' => 'Publishing House',
 ];
