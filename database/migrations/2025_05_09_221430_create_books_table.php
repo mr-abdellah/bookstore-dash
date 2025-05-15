@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('dimensions')->nullable();
             $table->integer('pages_count')->nullable();
             $table->json('images')->nullable();
+            $table->string('cover')->nullable(); // Added cover field
             $table->timestamps();
 
             $table->foreign('author_id')

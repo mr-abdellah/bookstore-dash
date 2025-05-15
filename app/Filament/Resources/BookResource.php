@@ -125,7 +125,15 @@ class BookResource extends Resource
                     ->label(fn() => __('book.pages_count'))
                     ->numeric()
                     ->default(null),
-
+                
+                Forms\Components\FileUpload::make('cover')
+                    ->label(fn() => __('book.cover'))
+                    ->image()
+                    ->imageEditor()
+                    ->imageResizeMode('cover')
+                    ->imageCropAspectRatio('2:3')
+                    ->directory('books/covers'),
+                
                 Forms\Components\FileUpload::make('images')
                     ->label(fn() => __('book.images'))
                     ->multiple()

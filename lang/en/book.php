@@ -12,6 +12,7 @@ return [
     'dimensions' => 'Dimensions (W x H x D)',
     'pages_count' => 'Pages Count',
     'images' => 'Images',
+    'cover' => 'Cover',  // Added cover translation
 
     // Table Labels
     'author_name' => 'Author',

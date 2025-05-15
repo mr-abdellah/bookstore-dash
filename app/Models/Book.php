@@ -25,6 +25,7 @@ class Book extends Model
         'dimensions',
         'pages_count',
         'images',
+        'cover',
     ];
 
     protected $casts = [
@@ -57,5 +58,10 @@ class Book extends Model
     public function reviews()
     {
         return $this->morphMany(Review::class, 'reviewable');
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
     }
 }

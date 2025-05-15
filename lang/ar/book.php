@@ -12,6 +12,7 @@ return [
     'dimensions' => 'الأبعاد (العرض × الارتفاع × العمق)',
     'pages_count' => 'عدد الصفحات',
     'images' => 'الصور',
+    'cover' => 'الغلاف',  // Added cover translation
 
 
     // Table Labels
