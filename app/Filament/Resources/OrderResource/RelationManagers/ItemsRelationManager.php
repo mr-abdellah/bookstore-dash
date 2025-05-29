@@ -3,47 +3,64 @@
 namespace App\Filament\Resources\OrderResource\RelationManagers;
 
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Grouping\Group;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class ItemsRelationManager extends RelationManager
 {
     protected static string $relationship = 'items';
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('title')
             ->columns([
-                Tables\Columns\TextColumn::make('title'),
+                TextColumn::make('book.title')
+                    ->label('Book Title')
+                    ->searchable(),
+                TextColumn::make('quantity')
+                    ->label('Quantity')
+                    ->numeric(),
+                TextColumn::make('unit_price')
+                    ->label('Unit Price')
+                    ->numeric(),
+                TextColumn::make('commission')
+                    ->label('Commission')
+                    ->numeric(),
+                // TextColumn::make('status')
+                //     ->label('Status')
+                //     ->searchable(),
             ])
             ->filters([
-                //
-            ])
-            ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                // Add filters if needed
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // Add individual actions if needed
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+                BulkAction::make('confirm')
+                    ->label('Confirm Selected')
+                    ->action(function ($records) {
+                        $records->each->update(['status' => 'confirmed']);
+                    })
+                    ->deselectRecordsAfterCompletion(),
+                BulkAction::make('cancel')
+                    ->label('Cancel Selected')
+                    ->action(function ($records) {
+                        $records->each->update(['status' => 'cancelled']);
+                    })
+                    ->deselectRecordsAfterCompletion(),
+            ])
+            ->groups([
+                Group::make('status')
+                    ->label('Status')
+                    ->getTitleFromRecordUsing(fn($record) => ucfirst($record->status)),
+                Group::make('book.publishing_house.name')
+                    ->label('Publishing House'),
+            ])
+            ->defaultGroup('book.publishing_house.name');
     }
 }

@@ -46,4 +46,21 @@ class PublishingHouse extends Model
     {
         return $this->morphMany(Review::class, 'reviewable');
     }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    // Optional method to fetch related orders
+    public function getRelatedOrders()
+    {
+        return Order::whereHas('items', function ($query) {
+            $query->where('publishing_house_id', $this->id);
+        })->with([
+                    'items' => function ($query) {
+                        $query->where('publishing_house_id', $this->id);
+                    }
+                ])->get();
+    }
 }

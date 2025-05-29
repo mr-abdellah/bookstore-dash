@@ -20,11 +20,9 @@ return new class extends Migration {
             $table->string('order_status')->default('pending');
             $table->string('payment_status')->default('pending');
             $table->string('payment_method')->default('offline');
-            $table->uuid('publishing_house_id')->nullable()->index();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
-            $table->foreign('publishing_house_id')->references('id')->on('publishing_houses')->nullOnDelete();
             $table->foreign('delivery_type_id')->references('id')->on('delivery_types')->nullOnDelete();
         });
     }

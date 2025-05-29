@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatus;
 use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,12 +21,19 @@ class OrderItem extends Model
         'unit_price',
         'commission',
         'publishing_house_id',
+        'profit_percentage',
+        'status',
+        'confirmed_by',
+        'confirmed_at',
     ];
 
     protected $casts = [
         'quantity' => 'integer',
         'unit_price' => 'decimal:2',
         'commission' => 'decimal:2',
+        'profit_percentage' => 'decimal:2',
+        'status' => OrderStatus::class,
+        'confirmed_at' => 'datetime',
     ];
 
     public function order()
@@ -38,8 +46,13 @@ class OrderItem extends Model
         return $this->belongsTo(Book::class);
     }
 
-    public function publishingHouse()
+    public function publishing_house()
     {
         return $this->belongsTo(PublishingHouse::class);
+    }
+
+    public function confirmedBy()
+    {
+        return $this->belongsTo(User::class, 'confirmed_by');
     }
 }

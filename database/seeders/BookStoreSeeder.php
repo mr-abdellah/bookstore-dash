@@ -7,6 +7,13 @@ use App\Models\PublishingHouse;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\PlatformSettings;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Stock;
+use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -14,21 +21,54 @@ class BookStoreSeeder extends Seeder
 {
     public function run()
     {
-        // Create 5 Users
-        $users = [];
-        for ($i = 1; $i <= 5; $i++) {
-            $users[] = User::create([
-                'first_name' => 'User',
+        // Create Admin
+        $admin = User::create([
+            'first_name' => 'Admin',
+            'last_name' => 'User',
+            'email' => 'admin@example.com',
+            'phone' => '+12345678901',
+            'password' => bcrypt('password'),
+            'role' => 'admin',
+            'status' => 'active'
+        ]);
+
+        // Create Clients
+        $clients = [];
+        for ($i = 1; $i <= 4; $i++) {
+            $clients[] = User::create([
+                'first_name' => 'Client',
                 'last_name' => $i,
-                'email' => "user{$i}@example.com",
+                'email' => "client{$i}@example.com",
                 'phone' => '+1234567890' . $i,
                 'password' => bcrypt('password'),
-                'role' => 'user',
+                'role' => 'client',
                 'status' => 'active'
             ]);
         }
 
-        // Create some categories first
+        // Create Publishing House Owners
+        $owners = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $owners[] = User::create([
+                'first_name' => 'Owner',
+                'last_name' => $i,
+                'email' => "owner{$i}@example.com",
+                'phone' => '+1987654321' . $i,
+                'password' => bcrypt('password'),
+                'role' => 'publishing_house_owner',
+                'status' => 'active'
+            ]);
+        }
+
+        // Seed Platform Settings (for global profit percentage)
+        PlatformSettings::create([
+            'profit_percentage' => 2.00, // 2% default commission rate
+            'platform_name' => 'Book Platform',
+            'contact_email' => 'contact@example.com',
+            'contact_phone' => '+1234567890',
+        ]);
+
+        // Create Categories
         $categories = [];
         $categoryNames = [
             ['name_en' => 'Fiction', 'name_fr' => 'Fiction', 'name_ar' => 'خيال'],
@@ -47,7 +87,7 @@ class BookStoreSeeder extends Seeder
             ]);
         }
 
-        // Create 5 Publishing Houses (each owned by a user)
+        // Create Publishing Houses
         $publishingHouses = [];
         $publishingHouseNames = [
             'Penguin Random House',
@@ -59,14 +99,14 @@ class BookStoreSeeder extends Seeder
 
         for ($i = 0; $i < 5; $i++) {
             $publishingHouses[] = PublishingHouse::create([
-                'owner_id' => $users[$i]->id,
+                'owner_id' => $owners[$i]->id,
                 'name' => $publishingHouseNames[$i],
                 'email' => strtolower(str_replace(' ', '', $publishingHouseNames[$i])) . '@example.com',
                 'phone' => '+1987654321' . $i,
                 'address' => ($i + 1) . '00 Publishing St, Book City, BC 1000' . $i,
                 'website' => 'https://www.' . strtolower(str_replace(' ', '', $publishingHouseNames[$i])) . '.com',
-                'established_year' => (1950 + ($i * 10)) . '-01-01', // Convert to date format
-                'description' => 'A leading publishing house specializing in various genres and high-quality publications.',
+                'established_year' => (1950 + ($i * 10)) . '-01-01',
+                'description' => 'A leading publishing house specializing in various genres.',
                 'social_links' => [
                     'facebook' => 'https://facebook.com/' . strtolower(str_replace(' ', '', $publishingHouseNames[$i])),
                     'twitter' => 'https://twitter.com/' . strtolower(str_replace(' ', '', $publishingHouseNames[$i])),
@@ -76,7 +116,7 @@ class BookStoreSeeder extends Seeder
             ]);
         }
 
-        // Create 10 Authors (2 authors per publishing house)
+        // Create Authors
         $authors = [];
         $authorNames = [
             'John Smith',
@@ -92,29 +132,16 @@ class BookStoreSeeder extends Seeder
         ];
 
         for ($i = 0; $i < 10; $i++) {
-            $publishingHouseIndex = $i % 5; // Distribute authors across publishing houses
-
+            $publishingHouseIndex = $i % 5;
             $authors[] = Author::create([
                 'name' => $authorNames[$i],
-                'bio' => 'A renowned author with multiple bestselling books and years of writing experience. Known for engaging storytelling and compelling characters.',
+                'bio' => 'A renowned author known for engaging storytelling.',
                 'publishing_house_id' => $publishingHouses[$publishingHouseIndex]->id,
             ]);
         }
 
-        // Create 10 Books for each Author (100 books total)
-        $bookGenres = [
-            'Mystery',
-            'Romance',
-            'Thriller',
-            'Adventure',
-            'Drama',
-            'Comedy',
-            'Horror',
-            'Fantasy',
-            'Sci-Fi',
-            'Historical'
-        ];
-
+        // Create Books
+        $bookGenres = ['Mystery', 'Romance', 'Thriller', 'Adventure', 'Drama', 'Comedy', 'Horror', 'Fantasy', 'Sci-Fi', 'Historical'];
         $bookTitles = [
             'The Silent Observer',
             'Midnight Dreams',
@@ -139,26 +166,70 @@ class BookStoreSeeder extends Seeder
                     'category_id' => $categories[$categoryIndex]->id,
                     'publishing_house_id' => $author->publishing_house_id,
                     'title' => $baseTitle . ' - ' . $genre,
-                    'description' => "An engaging {$genre} novel that takes readers on an unforgettable journey. This book combines masterful storytelling with deep character development, making it a must-read for fans of the genre.",
-                    'price' => rand(10, 50) + (rand(0, 99) / 100), // Random price between 10.00 and 50.99
+                    'description' => "An engaging {$genre} novel.",
+                    'price' => rand(10, 50) + (rand(0, 99) / 100),
                     'language' => ['English', 'French', 'Arabic'][rand(0, 2)],
                     'dimensions' => '6 x 9 inches',
                     'pages_count' => rand(200, 500),
-                    'images' => [
-                        'book_image_1.jpg',
-                        'book_image_2.jpg'
-                    ],
+                    'images' => ['book_image_1.jpg', 'book_image_2.jpg'],
                     'cover' => 'book_cover_' . ($authorIndex + 1) . '_' . ($bookIndex + 1) . '.jpg'
                 ]);
             }
         }
 
+        // Seed Stock
+        foreach (Book::all() as $book) {
+            Stock::create([
+                'book_id' => $book->id,
+                'quantity' => rand(10, 100),
+                'publishing_house_id' => $book->publishing_house_id,
+            ]);
+        }
+
+        // Seed Orders and Order Items
+        $client = $clients[0];
+        $order = Order::create([
+            'user_id' => $client->id,
+            'first_name' => $client->first_name,
+            'last_name' => $client->last_name,
+            'phone' => $client->phone,
+            'wilaya' => 'Algiers',
+            'commune' => 'Algiers',
+            'address' => '123 Street, Algiers',
+            'delivery_type_id' => 1, // Adjust if delivery types exist
+            'order_status' => OrderStatus::PENDING,
+            'payment_status' => PaymentStatus::PENDING,
+            'payment_method' => PaymentMethod::OFFLINE,
+        ]);
+
+        $books = Book::inRandomOrder()->take(3)->get();
+        $profitPercentage = PlatformSettings::first()->profit_percentage;
+        foreach ($books as $book) {
+            $quantity = rand(1, 5);
+            $unitPrice = $book->price;
+            $commission = $unitPrice * $quantity * ($profitPercentage / 100);
+
+            OrderItem::create([
+                'order_id' => $order->id,
+                'book_id' => $book->id,
+                'quantity' => $quantity,
+                'unit_price' => $unitPrice,
+                'commission' => $commission,
+                'publishing_house_id' => $book->publishing_house_id,
+                'profit_percentage' => $profitPercentage,
+                'status' => OrderStatus::PENDING,
+            ]);
+        }
+
+        // Output
         $this->command->info('✅ Successfully created:');
-        $this->command->info('- 5 Users');
-        $this->command->info('- 5 Categories');
+        $this->command->info('- 1 Admin');
+        $this->command->info('- 4 Clients');
+        $this->command->info('- 5 Publishing House Owners');
         $this->command->info('- 5 Publishing Houses');
-        $this->command->info('- 10 Authors (2 per publishing house)');
-        $this->command->info('- 100 Books (10 per author)');
-        $this->command->info('All relationships properly linked!');
+        $this->command->info('- 10 Authors');
+        $this->command->info('- 100 Books');
+        $this->command->info('- Stock for all books');
+        $this->command->info('- 1 Order with 3 OrderItems');
     }
 }

@@ -15,6 +15,10 @@ return new class extends Migration {
             $table->decimal('unit_price', 10, 2);
             $table->decimal('commission', 10, 2);
             $table->uuid('publishing_house_id')->nullable()->index();
+            $table->decimal('profit_percentage', 5, 2)->nullable();
+            $table->string('status')->default('pending');
+            $table->foreignUuid('confirmed_by')->nullable()->constrained('users');
+            $table->timestamp('confirmed_at')->nullable();
             $table->timestamps();
 
             $table->foreign('order_id')->references('id')->on('orders')->cascadeOnDelete();
