@@ -12,4 +12,14 @@ return [
     'total' => 'Total',
     'status' => 'Statut',
     'publishing_house' => 'Maison d\'édition',
+    
+    // Added for infolist
+    'user_information' => 'Informations Utilisateur',
+    'order_status' => 'Statut de la Commande',
+    'status_pending' => 'En attente',
+    'status_confirmed' => 'Confirmé',
+    'status_processing' => 'En traitement',
+    'status_shipped' => 'Expédié',
+    'status_delivered' => 'Livré',
+    'status_cancelled' => 'Annulé',
 ];

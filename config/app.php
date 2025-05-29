@@ -123,4 +123,14 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+
+    'supplier' => [
+        'name' => env('SUPPLIER_NAME', 'Media Tech SARL'),
+        'address' => env('SUPPLIER_ADDRESS', '123 Rue des Livres'),
+        'city' => env('SUPPLIER_CITY', 'Alger, 16000'),
+        'phone' => env('SUPPLIER_PHONE', '021 12 34 56'),
+        'email' => env('SUPPLIER_EMAIL', 'contact@mediatech.dz'),
+        'logo' => env('SUPPLIER_LOGO', '/images/logo.png'),
+    ],
+
 ];

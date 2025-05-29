@@ -9,6 +9,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Grouping\Group;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Summarizers\Sum;
 
 class ItemsRelationManager extends RelationManager
 {
@@ -18,21 +20,43 @@ class ItemsRelationManager extends RelationManager
     {
         return $table
             ->columns([
+                ImageColumn::make('publishingHouse.logo')
+                    ->label('')
+                    ->circular()
+                    ->size(50),
                 TextColumn::make('book.title')
-                    ->label('Book Title')
+                    ->label(fn() => __('order_item.book_title'))
                     ->searchable(),
                 TextColumn::make('quantity')
-                    ->label('Quantity')
+                    ->label(fn() => __('order_item.quantity'))
                     ->numeric(),
                 TextColumn::make('unit_price')
-                    ->label('Unit Price')
+                    ->label(fn() => __('order_item.unit_price'))
                     ->numeric(),
                 TextColumn::make('commission')
-                    ->label('Commission')
-                    ->numeric(),
-                // TextColumn::make('status')
-                //     ->label('Status')
-                //     ->searchable(),
+                    ->label(fn() => __('order_item.commission'))
+                    ->numeric()
+                    ->summarize(Sum::make()->label(fn() => __('order_item.total_profit'))),
+                TextColumn::make('status')
+                    ->label(fn() => __('order_item.status'))
+                    ->formatStateUsing(fn($record) => __('order_item.status_' . $record->status->value))
+                    ->badge()
+                    ->color(fn($record) => match ($record->status->value) {
+                        'pending' => 'warning',
+                        'confirmed' => 'primary',
+                        'shipped' => 'info',
+                        'delivered' => 'success',
+                        'cancelled' => 'danger',
+                    })
+                    ->icon(fn($record) => match ($record->status->value) {
+                        'pending' => 'heroicon-o-clock',
+                        'confirmed' => 'heroicon-o-check-circle',
+                        'shipped' => 'heroicon-o-truck',
+                        'delivered' => 'heroicon-o-check',
+                        'cancelled' => 'heroicon-o-x-circle',
+                    })
+                    ->size(TextColumn\TextColumnSize::Large)
+                    ->searchable(),
             ])
             ->filters([
                 // Add filters if needed
@@ -42,13 +66,13 @@ class ItemsRelationManager extends RelationManager
             ])
             ->bulkActions([
                 BulkAction::make('confirm')
-                    ->label('Confirm Selected')
+                    ->label(fn() => __('order_item.confirm_selected'))
                     ->action(function ($records) {
                         $records->each->update(['status' => 'confirmed']);
                     })
                     ->deselectRecordsAfterCompletion(),
                 BulkAction::make('cancel')
-                    ->label('Cancel Selected')
+                    ->label(fn() => __('order_item.cancel_selected'))
                     ->action(function ($records) {
                         $records->each->update(['status' => 'cancelled']);
                     })
@@ -56,11 +80,13 @@ class ItemsRelationManager extends RelationManager
             ])
             ->groups([
                 Group::make('status')
-                    ->label('Status')
-                    ->getTitleFromRecordUsing(fn($record) => ucfirst($record->status)),
-                Group::make('book.publishing_house.name')
-                    ->label('Publishing House'),
+                    ->label(fn() => __('order_item.status'))
+                    ->getTitleFromRecordUsing(fn($record) => __("order_item.status_{$record->status->value}")),
+                Group::make('book.publishingHouse.name')
+                    ->label(fn() => __('order_item.publishing_house'))
+                    ->collapsible(),
             ])
-            ->defaultGroup('book.publishing_house.name');
+            ->defaultGroup('book.publishingHouse.name')
+        ;
     }
 }

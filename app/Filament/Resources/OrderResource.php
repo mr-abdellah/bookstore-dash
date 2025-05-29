@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\OrderStatus;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers\ItemsRelationManager;
 use App\Models\Order;
@@ -16,6 +17,9 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\ViewAction;
+use Filament\Infolists;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Infolist;
 
 class OrderResource extends Resource
 {
@@ -35,6 +39,46 @@ class OrderResource extends Resource
     public static function getNavigationGroup(): ?string
     {
         return __('sidebar.orders_and_sales');
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make(fn() => __('order.user_information'))
+                    ->schema([
+                        Infolists\Components\TextEntry::make('first_name')
+                            ->label(fn() => __('order.first_name')),
+                        Infolists\Components\TextEntry::make('last_name')
+                            ->label(fn() => __('order.last_name')),
+                        Infolists\Components\TextEntry::make('phone')
+                            ->label(fn() => __('order.phone')),
+                        Infolists\Components\TextEntry::make('wilaya')
+                            ->label(fn() => __('order.wilaya')),
+                        Infolists\Components\TextEntry::make('commune')
+                            ->label(fn() => __('order.commune')),
+                        Infolists\Components\TextEntry::make('address')
+                            ->label(fn() => __('order.address')),
+                        Infolists\Components\TextEntry::make('order_status')
+                            ->formatStateUsing(fn($record) => __('order.status_' . $record->order_status->value))
+                            ->label(fn() => __('order.order_status'))
+                            ->badge()
+                            ->color(fn(OrderStatus $state): string => match ($state->value) {
+                                'pending' => 'warning',
+                                'confirmed' => 'primary',
+                                'shipped' => 'info',
+                                'delivered' => 'success',
+                                'cancelled' => 'danger',
+                                default => 'secondary',
+                            })
+                    ])
+                    ->columns([
+                        'default' => 2,
+                        'md' => 3,
+                        'lg' => 4,
+                    ])
+
+            ]);
     }
 
     public static function form(Form $form): Form
@@ -87,11 +131,11 @@ class OrderResource extends Resource
                 Select::make('status')
                     ->label(fn() => __('order.status'))
                     ->options([
-                        'pending' => 'Pending',
-                        'processing' => 'Processing',
-                        'shipped' => 'Shipped',
-                        'delivered' => 'Delivered',
-                        'cancelled' => 'Cancelled'
+                        'pending' => __('order.status_pending'),
+                        'processing' => __('order.status_processing'),
+                        'shipped' => __('order.status_shipped'),
+                        'delivered' => __('order.status_delivered'),
+                        'cancelled' => __('order.status_cancelled')
                     ])
                     ->required()
                     ->default('pending'),
@@ -128,10 +172,6 @@ class OrderResource extends Resource
 
                 TextColumn::make('address')
                     ->label(fn() => __('order.address'))
-                    ->searchable(),
-
-                TextColumn::make('delivery_type_id')
-                    ->label(fn() => __('order.delivery_type_id'))
                     ->searchable(),
 
                 TextColumn::make('total')

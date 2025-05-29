@@ -24,7 +24,6 @@ class Order extends Model
         'wilaya',
         'commune',
         'address',
-        'delivery_type_id',
         'order_status',
         'payment_status',
         'payment_method',

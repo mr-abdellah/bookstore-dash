@@ -46,7 +46,7 @@ class OrderItem extends Model
         return $this->belongsTo(Book::class);
     }
 
-    public function publishing_house()
+    public function publishingHouse()
     {
         return $this->belongsTo(PublishingHouse::class);
     }

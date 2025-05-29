@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\PublishingHouseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
+
 // Public routes
 Route::prefix('authors')->group(function () {
     Route::get('/', [AuthorController::class, 'index']);
