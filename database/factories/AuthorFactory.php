@@ -12,7 +12,6 @@ class AuthorFactory extends Factory
 
     public function definition(): array
     {
-        // Predefined list of 40 real author names with multilingual bios
         $authors = [
             [
                 'name' => 'Chimamanda Ngozi Adichie',
@@ -37,14 +36,6 @@ class AuthorFactory extends Factory
                 'bio_en' => 'Gabriel García Márquez was a Colombian novelist and Nobel laureate, known for "One Hundred Years of Solitude." He pioneered magical realism in Latin American literature.',
                 'bio_fr' => 'Gabriel García Márquez était un romancier colombien et lauréat du Nobel, connu pour "Cent ans de solitude." Il a été pionnier du réalisme magique en littérature latino-américaine.',
                 'bio_ar' => 'غابرييل غارسيا ماركيز كان روائيًا كولومبيًا وحائزًا على جائزة نوبل، اشتهر بـ"مئة عام من العزلة". كان رائدًا في الواقعية السحرية في الأدب اللاتيني الأمريكي.'
-            ],
-            [
-                'name' => 'Sally Rooney',
-                'bio_en' => 'Sally Rooney is an Irish novelist known for "Normal People" and "Conversations with Friends." Her work focuses on modern relationships and social dynamics.',
-                'bio_fr' => 'Sally Rooney est une romancière irlandaise connue pour "Normal People" et "Conversations avec des amis." Ses œuvres se concentrent sur les relations modernes et la dynamique sociale.',
-                'bio_ar' => 'سالي روني روائية أيرلند _
-
-ية معروفة بـ"أناس عاديون" و"محادثات مع أصدقاء". تركز أعمالها على العلاقات الحديثة والديناميكيات الاجتماعية.'
             ],
             [
                 'name' => 'Khaled Hosseini',

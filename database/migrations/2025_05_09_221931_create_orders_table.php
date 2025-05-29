@@ -16,14 +16,16 @@ return new class extends Migration {
             $table->string('wilaya');
             $table->string('commune');
             $table->text('address');
-            $table->decimal('total', 10, 2);
-            $table->string('status')->default('pending');
+            $table->uuid('delivery_type_id')->nullable()->index();
+            $table->string('order_status')->default('pending');
+            $table->string('payment_status')->default('pending');
+            $table->string('payment_method')->default('offline');
+            $table->uuid('publishing_house_id')->nullable()->index();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-
-            $table->uuid('publishing_house_id')->nullable()->index();
+            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
             $table->foreign('publishing_house_id')->references('id')->on('publishing_houses')->nullOnDelete();
+            $table->foreign('delivery_type_id')->references('id')->on('delivery_types')->nullOnDelete();
         });
     }
 

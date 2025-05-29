@@ -15,34 +15,29 @@ class BookFactory extends Factory
 
     public function definition(): array
     {
-        $path = public_path('csv/books.csv');
-        $handle = fopen($path, 'r');
-        $headers = fgetcsv($handle, 0, ';');
+        // Ensure related models exist
+        $authorIds = Author::pluck('id');
+        $categoryIds = Category::pluck('id');
+        $publishingHouseIds = PublishingHouse::pluck('id');
 
-        // Read one random row
-        $rows = [];
-        while (($row = fgetcsv($handle, 0, ';')) !== false) {
-            $rows[] = $row;
+        if ($authorIds->isEmpty() || $categoryIds->isEmpty() || $publishingHouseIds->isEmpty()) {
+            throw new \Exception('Related models (Author, Category, or PublishingHouse) are empty. Please seed related tables.');
         }
-        fclose($handle);
-
-        $book = $this->faker->randomElement($rows);
-        $bookData = array_combine($headers, $book);
 
         return [
             'id' => Str::uuid()->toString(),
-            'author_id' => Author::pluck('id')->random(),
-            'category_id' => Category::pluck('id')->random(),
-            'publishing_house_id' => PublishingHouse::pluck('id')->random(),
+            'author_id' => $authorIds->random(),
+            'category_id' => $categoryIds->random(),
+            'publishing_house_id' => $publishingHouseIds->random(),
             'discount_id' => null,
-            'title' => $bookData['Book-Title'],
+            'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(5),
             'price' => $this->faker->randomFloat(2, 500, 5000),
             'language' => $this->faker->randomElement(['Arabic', 'French', 'English']),
             'dimensions' => $this->faker->randomElement(['14x21 cm', '16x24 cm', '20x28 cm']),
             'pages_count' => $this->faker->numberBetween(100, 600),
-            'images' => [$bookData['Image-URL-L']],
-            'cover' => $bookData['Image-URL-L'],
+            'images' => [$this->faker->imageUrl(640, 480, 'books')],
+            'cover' => $this->faker->imageUrl(200, 300, 'books'),
             'created_at' => $this->faker->dateTimeBetween('-3 years', 'now'),
             'updated_at' => $this->faker->dateTimeBetween('-3 years', 'now'),
         ];

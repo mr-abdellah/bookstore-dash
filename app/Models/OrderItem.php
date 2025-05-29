@@ -18,11 +18,14 @@ class OrderItem extends Model
         'book_id',
         'quantity',
         'unit_price',
+        'commission',
+        'publishing_house_id',
     ];
 
     protected $casts = [
-        'quantity'   => 'integer',
+        'quantity' => 'integer',
         'unit_price' => 'decimal:2',
+        'commission' => 'decimal:2',
     ];
 
     public function order()
@@ -33,5 +36,10 @@ class OrderItem extends Model
     public function book()
     {
         return $this->belongsTo(Book::class);
+    }
+
+    public function publishingHouse()
+    {
+        return $this->belongsTo(PublishingHouse::class);
     }
 }
