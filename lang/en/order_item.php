@@ -17,4 +17,12 @@ return [
     'status_shipped' => 'Shipped',
     'status_delivered' => 'Delivered',
     'status_cancelled' => 'Cancelled',
+    'delete' => 'Delete',
+    'edit_profit_percentage' => 'Edit Profit Percentage',
+    'profit_percentage' => 'Profit Percentage',
+    'heading' => 'Order Items',
+    'subheading' => 'Details of the books included in this order',
+    'total_price' => 'Total Price',
+    'currency' => 'DA',
+
 ];

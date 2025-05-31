@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Order;
+use App\Models\PlatformSettings;
 use Illuminate\Support\Facades\View;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -30,16 +31,25 @@ class PurchaseOrderService
      */
     public function generatePdf(Order $order): \Barryvdh\DomPDF\PDF
     {
-        return Pdf::loadView('purchase-order.template', [
-            'order' => $order,
-            'orderNumber' => $this->generateOrderNumber($order),
-            'orderDate' => $order->created_at->format('d/m/Y'),
-            'supplier' => $this->getSupplierInfo(),
-            'client' => $this->getClientInfo($order),
-            'items' => $this->getOrderItems($order),
-            'totals' => $this->calculateTotals($order),
-            'conditions' => $this->getOrderConditions(),
-        ])->setPaper('a4', 'portrait')
+        mb_internal_encoding('UTF-8');
+
+        $html = mb_convert_encoding(
+            View::make('purchase-order.template', [
+                'order' => $order,
+                'orderNumber' => $this->generateOrderNumber($order),
+                'orderDate' => $order->created_at->format('d/m/Y'),
+                'supplier' => $this->getSupplierInfo(),
+                'client' => $this->getClientInfo($order),
+                'items' => $this->getOrderItems($order),
+                'totals' => $this->calculateTotals($order),
+                'conditions' => $this->getOrderConditions(),
+            ])->render(),
+            'HTML-ENTITIES',
+            'UTF-8'
+        );
+
+        return Pdf::loadHTML($html)
+            ->setPaper('a4', 'portrait')
             ->setOptions([
                 'isRemoteEnabled' => true,
                 'isHtml5ParserEnabled' => true,
@@ -48,16 +58,22 @@ class PurchaseOrderService
             ]);
     }
 
+
     /**
      * Download purchase order PDF
      */
-    public function downloadPdf(Order $order): \Symfony\Component\HttpFoundation\Response
+    public function downloadPdf(Order $order): \Symfony\Component\HttpFoundation\StreamedResponse
     {
         $pdf = $this->generatePdf($order);
         $filename = "bon-commande-{$order->id}.pdf";
 
-        return $pdf->download($filename);
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->stream();
+        }, $filename, [
+            'Content-Type' => 'application/pdf',
+        ]);
     }
+
 
     /**
      * Stream purchase order PDF (view in browser)
@@ -83,15 +99,18 @@ class PurchaseOrderService
      */
     private function getSupplierInfo(): array
     {
+        $settings = PlatformSettings::first() ?? new PlatformSettings();
+
         return [
-            'name' => config('app.supplier.name', 'Media Tech SARL'),
-            'address' => config('app.supplier.address', '123 Rue des Livres'),
-            'city' => config('app.supplier.city', 'Alger, 16000'),
-            'phone' => config('app.supplier.phone', '021 12 34 56'),
-            'email' => config('app.supplier.email', 'contact@mediatech.dz'),
-            'logo' => config('app.supplier.logo', asset('images/logo.png')),
+            'name' => $settings->platform_name ?? 'Media Tech SARL',
+            'address' => $settings->address ?? '123 Rue des Livres',
+            'city' => $settings->city ?? 'Alger, 16000',
+            'phone' => $settings->contact_phone ?? '021 12 34 56',
+            'email' => $settings->contact_email ?? 'contact@mediatech.dz',
+            'logo' => $settings->logo ? asset('storage/' . $settings->logo) : asset('images/logo.png'),
         ];
     }
+
 
     /**
      * Get client information from order

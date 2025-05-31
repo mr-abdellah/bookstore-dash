@@ -18,6 +18,10 @@ return new class extends Migration
             $table->string('logo')->nullable(); // store path to logo image
             $table->string('contact_email')->nullable();
             $table->string('contact_phone')->nullable();
+            $table->string('address');
+            $table->string('city');
+            $table->string('rc_number')->nullable();
+            $table->string('nif_number')->nullable();
             $table->timestamps();
         });
     }

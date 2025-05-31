@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OrderResource\Pages;
 
+use App\Enums\OrderStatus;
 use App\Filament\Resources\OrderResource;
 use App\Services\PurchaseOrderService;
 use Filament\Actions\Action;
@@ -14,17 +15,44 @@ class ViewOrder extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('confirm')
+                ->color('success')
+                ->label(fn() => __('order.confirm'))
+                ->action(function ($record) {
+                    $record->update(['order_status' => OrderStatus::CONFIRMED]);
+
+                    // Update all order items to confirmed status
+                    $record->items()->update([
+                        'status' => OrderStatus::CONFIRMED,
+                        'confirmed_at' => now(),
+                        'confirmed_by' => auth()->id(),
+                    ]);
+                })
+                ->requiresConfirmation(),
+
+            Action::make('cancel')
+                ->color('warning')
+                ->label(fn() => __('order.cancel'))
+                ->action(function ($record) {
+                    $record->update(['order_status' => OrderStatus::CANCELLED]);
+                    $record->items()->update([
+                        'status' => OrderStatus::CANCELLED,
+                        'confirmed_at' => now(),
+                        'confirmed_by' => auth()->id(),
+                    ]);
+                })
+                ->requiresConfirmation(),
             Action::make('download')
-                ->label('Télécharger Bon de Commande')
+                ->label(fn() => __('order.download_purchase_order'))
                 ->icon('heroicon-o-document-arrow-down')
-                ->color('primary')
+                ->color('info')
                 ->action(function ($record) {
                     $service = app(PurchaseOrderService::class);
                     return $service->downloadPdf($record);
                 }),
 
             Action::make('preview')
-                ->label('Aperçu')
+                ->label(fn() => __('order.preview'))
                 ->icon('heroicon-o-eye')
                 ->color('gray')
                 ->url(fn($record) => route('purchase-order.preview', $record))
@@ -32,8 +60,13 @@ class ViewOrder extends ViewRecord
 
             Action::make('delete')
                 ->color('danger')
+                ->label(fn() => __('order.delete'))
                 ->action('delete')
                 ->icon('heroicon-o-trash')
+                ->action(function ($record) {
+                    $record->delete();
+                    return redirect(OrderResource::getUrl('index'));
+                })
                 ->requiresConfirmation(),
         ];
     }

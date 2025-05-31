@@ -8,15 +8,9 @@ use App\Filament\Resources\OrderResource\RelationManagers\ItemsRelationManager;
 use App\Models\Order;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Infolists;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Infolist;
@@ -139,72 +133,6 @@ class OrderResource extends Resource
                     ])
                     ->required()
                     ->default('pending'),
-            ]);
-    }
-
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                TextColumn::make('user_id')
-                    ->label(fn() => __('order.user_id'))
-                    ->searchable(),
-
-                TextColumn::make('first_name')
-                    ->label(fn() => __('order.first_name'))
-                    ->searchable(),
-
-                TextColumn::make('last_name')
-                    ->label(fn() => __('order.last_name'))
-                    ->searchable(),
-
-                TextColumn::make('phone')
-                    ->label(fn() => __('order.phone'))
-                    ->searchable(),
-
-                TextColumn::make('wilaya')
-                    ->label(fn() => __('order.wilaya'))
-                    ->searchable(),
-
-                TextColumn::make('commune')
-                    ->label(fn() => __('order.commune'))
-                    ->searchable(),
-
-                TextColumn::make('address')
-                    ->label(fn() => __('order.address'))
-                    ->searchable(),
-
-                TextColumn::make('total')
-                    ->label(fn() => __('order.total'))
-                    ->numeric()
-                    ->sortable(),
-
-                TextColumn::make('status')
-                    ->label(fn() => __('order.status'))
-                    ->searchable(),
-
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                ViewAction::make(),
-                EditAction::make(),
-
-            ])
-            ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
             ]);
     }
 

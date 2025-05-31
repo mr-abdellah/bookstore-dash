@@ -18,7 +18,6 @@ class PlatformSettingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
 
-
     public static function getLabel(): ?string
     {
         return __('sidebar.settings');
@@ -31,10 +30,8 @@ class PlatformSettingResource extends Resource
 
     public static function canCreate(): bool
     {
-        // Prevent creating multiple settings since we only want one
         return ! self::getModel()::query()->exists();
     }
-
 
     public static function form(Form $form): Form
     {
@@ -57,13 +54,24 @@ class PlatformSettingResource extends Resource
                 Forms\Components\TextInput::make('contact_phone')
                     ->label(fn() => __('platform_setting.contact_phone')),
 
+                Forms\Components\TextInput::make('address')
+                    ->label(fn() => __('platform_setting.address')),
+
+                Forms\Components\TextInput::make('city')
+                    ->label(fn() => __('platform_setting.city')),
+
+                Forms\Components\TextInput::make('rc_number')
+                    ->label(fn() => __('platform_setting.rc_number')),
+
+                Forms\Components\TextInput::make('nif_number')
+                    ->label(fn() => __('platform_setting.nif_number')),
+
                 Forms\Components\FileUpload::make('logo')
                     ->image()
                     ->directory('logos')
                     ->label(fn() => __('platform_setting.logo')),
             ]);
     }
-
 
     public static function table(Table $table): Table
     {
@@ -75,6 +83,12 @@ class PlatformSettingResource extends Resource
                 Tables\Columns\TextColumn::make('profit_percentage')
                     ->label(fn() => __('platform_setting.profit_percentage'))
                     ->suffix('%'),
+
+                Tables\Columns\TextColumn::make('contact_email')
+                    ->label(fn() => __('platform_setting.contact_email')),
+
+                Tables\Columns\TextColumn::make('city')
+                    ->label(fn() => __('platform_setting.city')),
             ])
             ->filters([
                 //

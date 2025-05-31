@@ -133,4 +133,15 @@ return [
         'logo' => env('SUPPLIER_LOGO', '/images/logo.png'),
     ],
 
+
+    'pdf' => [
+        'enabled' => true,
+        'binary' => env('WKHTML_PDF_BINARY', '/usr/local/bin/wkhtmltopdf'), // Adjust this path
+        'timeout' => false,
+        'options' => [
+            'enable-local-file-access' => true, // important!
+        ],
+    ],
+
+
 ];

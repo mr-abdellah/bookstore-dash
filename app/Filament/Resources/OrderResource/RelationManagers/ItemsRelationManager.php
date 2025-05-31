@@ -2,23 +2,32 @@
 
 namespace App\Filament\Resources\OrderResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Tables;
+use Filament\Tables\Actions\EditAction;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Grouping\Group;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Summarizers\Count;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\Summarizers\Summarizer;
+use Illuminate\Database\Query\Builder;
 
 class ItemsRelationManager extends RelationManager
 {
     protected static string $relationship = 'items';
 
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
     public function table(Table $table): Table
     {
         return $table
+            ->heading(__("order_item.heading"))
+            ->description(fn() => __('order_item.subheading'))
             ->columns([
                 ImageColumn::make('publishingHouse.logo')
                     ->label('')
@@ -33,10 +42,28 @@ class ItemsRelationManager extends RelationManager
                 TextColumn::make('unit_price')
                     ->label(fn() => __('order_item.unit_price'))
                     ->numeric(),
+
                 TextColumn::make('commission')
-                    ->label(fn() => __('order_item.commission'))
+                    ->label(fn() => __('order_item.total_price'))
+                    ->suffix(" " . __("order_item.currency"))
+                    ->state(function ($record) {
+                        $totalPrice = $record->quantity * $record->unit_price;
+                        $profitAmount = ($totalPrice * $record->profit_percentage) / 100;
+                        return $profitAmount;
+                    })
+                    ->numeric(),
+
+                TextColumn::make('profit_percentage')
+                    ->label(fn() => __('order_item.profit_percentage'))
+                    ->suffix("%")
+                    ->badge()
+                    ->icon("heroicon-o-percent-badge")
+                    ->color("warning")
                     ->numeric()
-                    ->summarize(Sum::make()->label(fn() => __('order_item.total_profit'))),
+                    ->summarize(Summarizer::make()
+                        ->label(fn() => __('order_item.total_profit'))
+                        ->using(fn(Builder $query): float => $query->sum(\Illuminate\Support\Facades\DB::raw('quantity * unit_price * profit_percentage / 100')))),
+
                 TextColumn::make('status')
                     ->label(fn() => __('order_item.status'))
                     ->formatStateUsing(fn($record) => __('order_item.status_' . $record->status->value))
@@ -62,22 +89,40 @@ class ItemsRelationManager extends RelationManager
                 // Add filters if needed
             ])
             ->actions([
-                // Add individual actions if needed
-            ])
-            ->bulkActions([
-                BulkAction::make('confirm')
-                    ->label(fn() => __('order_item.confirm_selected'))
-                    ->action(function ($records) {
-                        $records->each->update(['status' => 'confirmed']);
+                EditAction::make('delete')
+                    ->label(fn() => __('order_item.delete'))
+                    ->action(fn($record) => $record->delete())
+                    ->requiresConfirmation()
+                    ->color('danger'),
+                EditAction::make('editProfitPercentage')
+                    ->label(fn() => __('order_item.edit_profit_percentage'))
+                    ->modalHeading(__('order_item.edit_profit_percentage'))
+                    ->form([
+                        TextInput::make('profit_percentage')
+                            ->label(fn() => __('order_item.profit_percentage'))
+                            ->numeric()
+                            ->required(),
+                    ])
+                    ->after(function ($record, $data) {
+                        $record->update(['profit_percentage' => $data['profit_percentage']]);
                     })
-                    ->deselectRecordsAfterCompletion(),
-                BulkAction::make('cancel')
-                    ->label(fn() => __('order_item.cancel_selected'))
-                    ->action(function ($records) {
-                        $records->each->update(['status' => 'cancelled']);
-                    })
-                    ->deselectRecordsAfterCompletion(),
+                    ->color('primary'),
             ])
+            // ->bulkActions([
+            //     BulkAction::make('confirm')
+            //         ->label(fn() => __('order_item.confirm_selected'))
+            //         ->action(function ($records) {
+            //             $records->each->update(['status' => 'confirmed']);
+            //         })
+            //         ->requiresConfirmation()
+            //         ->deselectRecordsAfterCompletion(),
+            //     BulkAction::make('cancel')
+            //         ->label(fn() => __('order_item.cancel_selected'))
+            //         ->action(function ($records) {
+            //             $records->each->update(['status' => 'cancelled']);
+            //         })
+            //         ->deselectRecordsAfterCompletion(),
+            // ])
             ->groups([
                 Group::make('status')
                     ->label(fn() => __('order_item.status'))
@@ -86,7 +131,7 @@ class ItemsRelationManager extends RelationManager
                     ->label(fn() => __('order_item.publishing_house'))
                     ->collapsible(),
             ])
-            ->defaultGroup('book.publishingHouse.name')
+            ->defaultGroup(null)
         ;
     }
 }

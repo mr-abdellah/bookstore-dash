@@ -17,4 +17,13 @@ return [
     'status_shipped' => 'تم الشحن',
     'status_delivered' => 'تم التسليم',
     'status_cancelled' => 'ملغي',
+    'delete' => 'حذف',
+    'edit_profit_percentage' => 'تعديل نسبة الربح',
+    'profit_percentage' => 'نسبة الربح',
+    'heading' => 'عناصر الطلب',
+    'subheading' => 'تفاصيل الكتب المشمولة في هذه الطلبية',
+    'total_price' => 'السعر الإجمالي',
+    'currency' => 'دج',
+
+
 ];

@@ -5,19 +5,23 @@ namespace App\Models;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
+use App\Traits\GeneratesOrderReference;
 use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    use UuidTrait, HasFactory;
+    use UuidTrait, HasFactory, GeneratesOrderReference;
 
     public $incrementing = false;
     protected $keyType = 'string';
 
+    protected $referencePrefix = 'BC';
+
     protected $fillable = [
         'user_id',
+        'reference',
         'first_name',
         'last_name',
         'phone',

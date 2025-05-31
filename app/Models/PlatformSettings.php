@@ -18,10 +18,14 @@ class PlatformSettings extends Model
         'logo',
         'contact_email',
         'contact_phone',
+        'address',
+        'city',
+        'rc_number',
+        'nif_number',
     ];
 
     public static function getSettings(): self
     {
-        return self::first() ?? new self(); // fallback to empty instance if not seeded
+        return self::first() ?? new self();
     }
 }

@@ -1,25 +1,31 @@
 <?php
 
 return [
-    'user_id' => 'ID Utilisateur',
+    'user_id' => 'ID utilisateur',
     'first_name' => 'Prénom',
     'last_name' => 'Nom',
     'phone' => 'Téléphone',
     'wilaya' => 'Wilaya',
     'commune' => 'Commune',
     'address' => 'Adresse',
-    'delivery_type_id' => 'Type de Livraison',
+    'delivery_type_id' => 'Type de livraison',
     'total' => 'Total',
     'status' => 'Statut',
-    'publishing_house' => 'Maison d\'édition',
-    
-    // Added for infolist
-    'user_information' => 'Informations Utilisateur',
-    'order_status' => 'Statut de la Commande',
+    'publishing_house' => 'Maison d’édition',
+    'user_information' => 'Informations utilisateur',
+    'order_status' => 'Statut de la commande',
     'status_pending' => 'En attente',
     'status_confirmed' => 'Confirmé',
-    'status_processing' => 'En traitement',
+    'status_processing' => 'En cours de traitement',
     'status_shipped' => 'Expédié',
     'status_delivered' => 'Livré',
     'status_cancelled' => 'Annulé',
+    'confirm' => 'Confirmer',
+    'cancel' => 'Annuler',
+    'delete' => 'Supprimer',
+    'preview' => 'Aperçu',
+    'download_purchase_order' => 'Télécharger le bon de commande',
+    'total_price' => 'Prix total',
+    'currency' => 'DA',
+
 ];

@@ -17,4 +17,10 @@ return [
     'status_shipped' => 'Expédié',
     'status_delivered' => 'Livré',
     'status_cancelled' => 'Annulé',
+    'delete' => 'Supprimer',
+    'edit_profit_percentage' => 'Modifier le pourcentage de profit',
+    'profit_percentage' => 'Pourcentage de profit',
+    'heading' => 'Articles de la commande',
+    'subheading' => 'Détails des livres inclus dans cette commande',
+
 ];

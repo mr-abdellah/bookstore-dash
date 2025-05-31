@@ -12,8 +12,6 @@ return [
     'total' => 'المجموع',
     'status' => 'الحالة',
     'publishing_house' => 'دار النشر',
-    
-    // Added for infolist
     'user_information' => 'معلومات المستخدم',
     'order_status' => 'حالة الطلب',
     'status_pending' => 'قيد الانتظار',
@@ -22,4 +20,10 @@ return [
     'status_shipped' => 'تم الشحن',
     'status_delivered' => 'تم التسليم',
     'status_cancelled' => 'ملغي',
+    'confirm' => 'تأكيد',
+    'cancel' => 'إلغاء',
+    'delete' => 'حذف',
+    'preview' => 'معاينة',
+    'download_purchase_order' => 'تحميل أمر الشراء',
+
 ];

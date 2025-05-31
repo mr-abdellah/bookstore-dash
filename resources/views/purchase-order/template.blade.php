@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <base href="{{ public_path() }}/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bon de Commande - {{ $supplier['name'] }}</title>
     <style>
@@ -13,230 +14,223 @@
         }
 
         body {
-            font-family: sans-serif;
-            background-color: #f3f4f6;
-            padding: 32px;
-            color: #374151;
-            line-height: 1.5;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.4;
+            font-size: 12px;
         }
 
         .container {
             max-width: 800px;
-            margin: 0 auto;
+            margin: 20px auto;
             background: white;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
+            border: 1px solid #ddd;
         }
 
-        .header {
-            padding: 24px;
-            border-bottom: 1px solid #e5e7eb;
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-bottom: 2px solid #eee;
+            padding: 15px;
         }
 
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .header-table td {
+            padding: 15px;
+            vertical-align: top;
         }
 
         .logo {
-            height: 80px;
+            height: 60px;
         }
 
         .header-right {
             text-align: right;
         }
 
-        .header-right h1 {
+        .header-title {
             font-size: 24px;
             font-weight: bold;
-            color: #1f2937;
+            color: #222;
             margin-bottom: 8px;
         }
 
-        .header-right p {
-            color: #6b7280;
+        .header-info {
+            color: #666;
             margin-bottom: 4px;
         }
 
         .info-section {
-            padding: 24px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            border-bottom: 1px solid #e5e7eb;
+            width: 100%;
+            border-collapse: collapse;
+            border-bottom: 2px solid #eee;
         }
 
-        .info-block h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 12px;
+        .info-section td {
+            width: 50%;
+            padding: 20px;
+            vertical-align: top;
         }
 
-        .info-block p {
-            color: #374151;
-            margin-bottom: 4px;
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
         }
 
-        .products-section {
-            padding: 24px;
-            border-bottom: 1px solid #e5e7eb;
+        .info-line {
+            margin-bottom: 5px;
+            color: #444;
         }
 
         .products-table {
             width: 100%;
             border-collapse: collapse;
-        }
-
-        .products-table thead tr {
-            background-color: #f9fafb;
+            margin: 20px 0;
         }
 
         .products-table th {
-            padding: 12px 16px;
-            font-weight: 600;
-            color: #6b7280;
-            font-size: 14px;
-            text-align: left;
-        }
-
-        .products-table th.center {
-            text-align: center;
-        }
-
-        .products-table th.right {
-            text-align: right;
-        }
-
-        .products-table tbody tr {
-            border-top: 1px solid #e5e7eb;
+            background-color: #f8f8f8;
+            padding: 12px 8px;
+            font-weight: bold;
+            color: #555;
+            font-size: 11px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #ddd;
         }
 
         .products-table td {
-            padding: 12px 16px;
-            font-size: 14px;
+            padding: 10px 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 11px;
         }
 
-        .products-table td.center {
+        .products-table .text-center {
             text-align: center;
         }
 
-        .products-table td.right {
+        .products-table .text-right {
             text-align: right;
         }
 
         .totals-section {
-            padding: 24px;
-            border-bottom: 1px solid #e5e7eb;
+            width: 100%;
+            border-collapse: collapse;
+            border-bottom: 2px solid #eee;
         }
 
-        .totals-container {
-            display: flex;
-            justify-content: flex-end;
+        .totals-section td {
+            padding: 20px;
+            vertical-align: top;
         }
 
-        .totals-box {
-            width: 256px;
+        .totals-table {
+            width: 250px;
+            margin-left: auto;
+            border-collapse: collapse;
         }
 
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
+        .totals-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
         }
 
-        .total-row.final {
-            border-top: 1px solid #e5e7eb;
+        .totals-table .total-row {
             font-weight: bold;
+            border-top: 2px solid #ddd;
+            font-size: 14px;
         }
 
         .conditions-section {
-            padding: 24px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
+            width: 100%;
+            border-collapse: collapse;
+            border-bottom: 2px solid #eee;
         }
 
-        .conditions h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 12px;
+        .conditions-section td {
+            width: 50%;
+            padding: 20px;
+            vertical-align: top;
         }
 
-        .conditions ul {
+        .conditions-list {
             list-style-type: disc;
-            padding-left: 20px;
+            margin-left: 20px;
         }
 
-        .conditions li {
-            font-size: 14px;
-            color: #6b7280;
-            margin-bottom: 4px;
+        .conditions-list li {
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 11px;
         }
 
-        .signatures {
-            margin-top: 32px;
-            padding-top: 32px;
-            border-top: 1px solid #e5e7eb;
+        .signatures-section {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
         }
 
-        .signatures-content {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .signature-block {
+        .signatures-section td {
+            width: 50%;
+            padding: 20px;
             text-align: center;
+            vertical-align: top;
         }
 
-        .signature-block p {
-            font-size: 14px;
-            color: #6b7280;
-            margin-bottom: 8px;
+        .signature-label {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 10px;
         }
 
         .signature-box {
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            padding: 8px;
-            width: 160px;
+            border: 1px solid #ccc;
+            width: 150px;
             height: 80px;
-            margin: 0 auto 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin: 10px auto;
+            position: relative;
+            background-color: #fafafa;
+        }
+
+        .signature-svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         .signature-name {
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 8px;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 12px;
         }
 
         .signature-title {
-            font-size: 12px;
-            color: #6b7280;
+            font-size: 10px;
+            color: #666;
+            margin-top: 2px;
         }
 
         .signature-line {
-            border-top: 1px solid #9ca3af;
-            width: 160px;
-            margin-top: 40px;
+            border-top: 1px solid #666;
+            width: 150px;
+            margin: 40px auto 0;
         }
 
         .footer {
-            background-color: #f9fafb;
-            padding: 16px;
+            background-color: #f8f8f8;
+            padding: 15px;
             text-align: center;
-            font-size: 12px;
-            color: #6b7280;
+            font-size: 10px;
+            color: #666;
+            border-top: 1px solid #ddd;
         }
 
         .footer p {
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -244,116 +238,112 @@
 <body>
     <div class="container">
         <!-- En-tête -->
-        <div class="header">
-            <div class="header-content">
-                <div>
+        <table class="header-table">
+            <tr>
+                <td width="60%">
                     <img src="{{ $supplier['logo'] }}" alt="{{ $supplier['name'] }} Logo" class="logo">
-                </div>
-                <div class="header-right">
-                    <h1>BON DE COMMANDE</h1>
-                    <p>N° {{ $orderNumber }}</p>
-                    <p>Date: {{ $orderDate }}</p>
-                </div>
-            </div>
-        </div>
+                </td>
+                <td width="40%" class="header-right">
+                    <div class="header-title">BON DE COMMANDE</div>
+                    <div class="header-info">N° {{ $orderNumber }}</div>
+                    <div class="header-info">Date: {{ $orderDate }}</div>
+                </td>
+            </tr>
+        </table>
 
         <!-- Informations client et vendeur -->
-        <div class="info-section">
-            <div class="info-block">
-                <h2>Fournisseur:</h2>
-                <p>{{ $supplier['name'] }}</p>
-                <p>{{ $supplier['address'] }}</p>
-                <p>{{ $supplier['city'] }}</p>
-                <p>Tél: {{ $supplier['phone'] }}</p>
-                <p>Email: {{ $supplier['email'] }}</p>
-            </div>
-            <div class="info-block">
-                <h2>Client:</h2>
-                <p>{{ $client['name'] }}</p>
-                <p>{{ $client['address'] }}</p>
-                <p>{{ $client['city'] }}</p>
-                <p>Tél: {{ $client['phone'] }}</p>
-                <p>Email: {{ $client['email'] }}</p>
-            </div>
-        </div>
+        <table class="info-section">
+            <tr>
+                <td>
+                    <div class="section-title">Fournisseur:</div>
+                    <div class="info-line">{{ $supplier['name'] }}</div>
+                    <div class="info-line">{{ $supplier['address'] }}</div>
+                    <div class="info-line">{{ $supplier['city'] }}</div>
+                    <div class="info-line">Tél: {{ $supplier['phone'] }}</div>
+                    <div class="info-line">Email: {{ $supplier['email'] }}</div>
+                </td>
+                <td>
+                    <div class="section-title">Client:</div>
+                    <div class="info-line">{{ $client['name'] }}</div>
+                    <div class="info-line">{{ $client['address'] }}</div>
+                    <div class="info-line">{{ $client['city'] }}</div>
+                    <div class="info-line">Tél: {{ $client['phone'] }}</div>
+                    <div class="info-line">Email: {{ $client['email'] }}</div>
+                </td>
+            </tr>
+        </table>
 
         <!-- Tableau des produits -->
-        <div class="products-section">
-            <table class="products-table">
-                <thead>
+        <table class="products-table">
+            <thead>
+                <tr>
+                    <th width="40%">Livre</th>
+                    <th width="10%" class="text-center">Quantité</th>
+                    <th width="20%" class="text-right">Prix Unitaire (DA)</th>
+                    <th width="20%" class="text-right">Montant (DA)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($items as $item)
                     <tr>
-                        <th>Réf.</th>
-                        <th>Description</th>
-                        <th class="center">Quantité</th>
-                        <th class="right">Prix Unitaire (DA)</th>
-                        <th class="right">Montant (DA)</th>
+                        <td>{{ $item['description'] }}</td>
+                        <td class="text-center">{{ $item['quantity'] }}</td>
+                        <td class="text-right">{{ $item['unit_price'] }}</td>
+                        <td class="text-right">{{ $item['total'] }}</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach($items as $item)
-                        <tr>
-                            <td>{{ $item['ref'] }}</td>
-                            <td>{{ $item['description'] }}</td>
-                            <td class="center">{{ $item['quantity'] }}</td>
-                            <td class="right">{{ $item['unit_price'] }}</td>
-                            <td class="right">{{ $item['total'] }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                @endforeach
+            </tbody>
+        </table>
 
         <!-- Récapitulatif -->
-        <div class="totals-section">
-            <div class="totals-container">
-                <div class="totals-box">
-                    <div class="total-row">
-                        <span>Sous-total:</span>
-                        <span>{{ $totals['subtotal'] }}</span>
-                    </div>
-                    <div class="total-row">
-                        <span>TVA (19%):</span>
-                        <span>{{ $totals['tva'] }}</span>
-                    </div>
-                    <div class="total-row final">
-                        <span>Total:</span>
-                        <span>{{ $totals['total'] }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <table class="totals-section">
+            <tr>
+                <td>
+                    <table class="totals-table">
+                        <tr class="total-row">
+                            <td>Total:</td>
+                            <td class="text-right">{{ $totals['total'] }}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
 
         <!-- Conditions et signatures -->
-        <div class="conditions-section">
-            <div class="conditions">
-                <h2>Conditions:</h2>
-                <ul>
-                    @foreach($conditions as $condition)
-                        <li>{{ $condition }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            <div class="signatures">
-                <div class="signatures-content">
-                    <div class="signature-block">
-                        <p>Signature du fournisseur</p>
-                        <div class="signature-box">
-                            <svg viewBox="0 0 200 50" width="120" height="30">
-                                <path
-                                    d="M10,30 C20,10 30,40 40,20 C50,10 60,30 70,20 C80,10 90,30 100,20 C110,10 120,30 130,20 C140,10 150,30 160,20 C170,10 180,30 190,20"
-                                    fill="none" stroke="#000" stroke-width="1.5" />
-                            </svg>
-                        </div>
-                        <div class="signature-name">Mohammed Karim</div>
-                        <div class="signature-title">Directeur Commercial</div>
-                    </div>
-                    <div class="signature-block">
-                        <p>Signature du client</p>
-                        <div class="signature-line"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <table class="conditions-section">
+            <tr>
+                <td>
+                    <div class="section-title">Conditions:</div>
+                    <ul class="conditions-list">
+                        @foreach ($conditions as $condition)
+                            <li>{{ $condition }}</li>
+                        @endforeach
+                    </ul>
+                </td>
+                <td>
+                    <table class="signatures-section">
+                        <tr>
+                            <td>
+                                <div class="signature-label">Signature du fournisseur</div>
+                                <div class="signature-box">
+                                    <svg class="signature-svg" viewBox="0 0 200 50" width="120" height="30">
+                                        <path
+                                            d="M10,30 C20,10 30,40 40,20 C50,10 60,30 70,20 C80,10 90,30 100,20 C110,10 120,30 130,20 C140,10 150,30 160,20 C170,10 180,30 190,20"
+                                            fill="none" stroke="#000" stroke-width="1.5" />
+                                    </svg>
+                                </div>
+                                <div class="signature-name">Mohammed Karim</div>
+                                <div class="signature-title">Directeur Commercial</div>
+                            </td>
+                            <td>
+                                <div class="signature-label">Signature du client</div>
+                                <div class="signature-line"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
 
         <!-- Pied de page -->
         <div class="footer">
