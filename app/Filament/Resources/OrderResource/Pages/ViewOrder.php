@@ -4,7 +4,7 @@ namespace App\Filament\Resources\OrderResource\Pages;
 
 use App\Enums\OrderStatus;
 use App\Filament\Resources\OrderResource;
-use App\Services\PurchaseOrderService;
+use App\Services\Orders\PurchaseOrderService;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
 

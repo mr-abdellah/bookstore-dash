@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BookController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\PublishingHouseController;
@@ -67,6 +68,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('favorites')->group(function () {
         Route::put('/{id}', [FavoriteController::class, 'update']);
         Route::delete('/{id}', [FavoriteController::class, 'delete']);
+    });
+
+    // orders
+    Route::prefix('orders')->group(function () {
+        Route::get('/', [OrderController::class, 'index']);
+        Route::get('/{id}', [OrderController::class, 'show']);
+        Route::post('/', [OrderController::class, 'store']);
     });
 });
 
