@@ -14,6 +14,8 @@ return [
     'publishing_house' => 'دار النشر',
     'user_information' => 'معلومات المستخدم',
     'order_status' => 'حالة الطلب',
+    'payment_status' => 'حالة الدفع',
+    'payment_method' => 'طريقة الدفع',
     'status_pending' => 'قيد الانتظار',
     'status_confirmed' => 'مؤكد',
     'status_processing' => 'قيد المعالجة',
@@ -26,4 +28,24 @@ return [
     'preview' => 'معاينة',
     'download_purchase_order' => 'تحميل أمر الشراء',
 
+    'update_status' => 'تحديث الحالة',
+
+    'statuses' => [
+        'pending' => 'قيد الانتظار',
+        'confirmed' => 'مؤكد',
+        'shipped' => 'تم الشحن',
+        'delivered' => 'تم التسليم',
+        'cancelled' => 'ملغي',
+    ],
+    'payment_statuses' => [
+        'pending' => 'قيد الانتظار',
+        'po_signed' => 'تم توقيع أمر الشراء',
+        'payment_confirmed' => 'تم تأكيد الدفع',
+        'paid' => 'مدفوع',
+        'failed' => 'فشل الدفع',
+    ],
+    'payment_methods' => [
+        'offline' => 'غير إلكتروني',
+        'online' => 'إلكتروني',
+    ],
 ];

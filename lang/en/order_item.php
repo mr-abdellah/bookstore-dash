@@ -24,5 +24,5 @@ return [
     'subheading' => 'Details of the books included in this order',
     'total_price' => 'Total Price',
     'currency' => 'DA',
-
+    'view_book' => 'View Book',
 ];

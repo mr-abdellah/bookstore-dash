@@ -14,6 +14,8 @@ return [
     'publishing_house' => 'Publishing House',
     'user_information' => 'User Information',
     'order_status' => 'Order Status',
+    'payment_status' => 'Payment Status',
+    'payment_method' => 'Payment Method',
     'status_pending' => 'Pending',
     'status_confirmed' => 'Confirmed',
     'status_processing' => 'Processing',
@@ -25,4 +27,25 @@ return [
     'delete' => 'Delete',
     'preview' => 'Preview',
     'download_purchase_order' => 'Download Purchase Order',
+
+    'update_status' => 'Update Status',
+
+    'statuses' => [
+        'pending' => 'Pending',
+        'confirmed' => 'Confirmed',
+        'shipped' => 'Shipped',
+        'delivered' => 'Delivered',
+        'cancelled' => 'Cancelled',
+    ],
+    'payment_statuses' => [
+        'pending' => 'Pending',
+        'po_signed' => 'PO Signed',
+        'payment_confirmed' => 'Payment Confirmed',
+        'paid' => 'Paid',
+        'failed' => 'Failed',
+    ],
+    'payment_methods' => [
+        'offline' => 'Offline',
+        'online' => 'Online',
+    ],
 ];

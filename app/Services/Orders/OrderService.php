@@ -10,7 +10,7 @@ use App\Enums\PaymentStatus;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
@@ -25,7 +25,9 @@ class OrderService
     public function getUserOrders(User $user, int $perPage = 15): LengthAwarePaginator
     {
         return $user->orders()
-            ->with(['items.book', 'items.publishingHouse'])
+            ->withCount(['items as total' => function ($query) {
+                $query->select(DB::raw('SUM(unit_price * quantity)'));
+            }])
             ->latest()
             ->paginate($perPage);
     }

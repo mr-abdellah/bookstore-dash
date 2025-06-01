@@ -29,9 +29,19 @@ class Book extends Model
     ];
 
     protected $casts = [
-        'images' => 'array',
         'price' => 'decimal:2',
     ];
+
+    public function getImagesAttribute($value)
+    {
+        return collect(json_decode($value, true))->map(fn($img) => url('storage/' . $img))->all();
+    }
+
+    public function getCoverAttribute($value)
+    {
+        return $value ? url('storage/' . $value) : null;
+    }
+
 
     // Relationships
 

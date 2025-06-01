@@ -2,15 +2,16 @@
 
 namespace App\Filament\Resources\OrderResource\RelationManagers;
 
+use App\Filament\Resources\BookResource;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Grouping\Group;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\Summarizers\Count;
-use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Illuminate\Database\Query\Builder;
 
@@ -85,10 +86,16 @@ class ItemsRelationManager extends RelationManager
                     ->size(TextColumn\TextColumnSize::Large)
                     ->searchable(),
             ])
-            ->filters([
-                // Add filters if needed
-            ])
             ->actions([
+                Action::make('viewBook')
+                    ->label(fn() => __('order_item.view_book'))
+                    ->action(function ($record) {
+                        return redirect(BookResource::getUrl('edit', [
+                            'record' => $record->book->id
+                        ]));
+                    })
+                    ->icon('heroicon-o-book-open')
+                    ->color('info'),
                 EditAction::make('delete')
                     ->label(fn() => __('order_item.delete'))
                     ->action(fn($record) => $record->delete())

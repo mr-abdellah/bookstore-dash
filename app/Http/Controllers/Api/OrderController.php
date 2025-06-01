@@ -26,25 +26,31 @@ class OrderController extends Controller
             $request->get('per_page', 15)
         );
 
-        return response()->json([
-            'success' => true,
-            'data' => $orders,
-        ]);
+        return response()->json($orders);
     }
 
     /**
      * Display the specified order.
      */
-    public function show(Order $order): JsonResponse
+    public function show(string $id): JsonResponse
     {
-        $this->authorize('view', $order);
+        try {
+            $order = Order::with([
+                'items.book',
+                'items.publishingHouse',
+                'user'
+            ])->findOrFail($id);
 
-        $orderData = $this->orderService->getOrderDetails($order);
-
-        return response()->json([
-            'success' => true,
-            'data' => $orderData,
-        ]);
+            return response()->json([
+                'success' => true,
+                'data' => $order,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order not found'
+            ], 404);
+        }
     }
 
     /**
@@ -69,7 +75,6 @@ class OrderController extends Controller
      */
     public function destroy(Order $order): JsonResponse
     {
-        $this->authorize('delete', $order);
 
         $this->orderService->deleteOrder($order);
 

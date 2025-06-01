@@ -1,22 +1,24 @@
 <?php
 
 return [
-    'user_id' => 'ID utilisateur',
+    'user_id' => 'Identifiant utilisateur',
     'first_name' => 'Prénom',
     'last_name' => 'Nom',
-    'phone' => 'Téléphone',
+    'phone' => 'Numéro de téléphone',
     'wilaya' => 'Wilaya',
     'commune' => 'Commune',
     'address' => 'Adresse',
     'delivery_type_id' => 'Type de livraison',
     'total' => 'Total',
     'status' => 'Statut',
-    'publishing_house' => 'Maison d’édition',
+    'publishing_house' => 'Maison d\'édition',
     'user_information' => 'Informations utilisateur',
     'order_status' => 'Statut de la commande',
+    'payment_status' => 'Statut du paiement',
+    'payment_method' => 'Méthode de paiement',
     'status_pending' => 'En attente',
     'status_confirmed' => 'Confirmé',
-    'status_processing' => 'En cours de traitement',
+    'status_processing' => 'En traitement',
     'status_shipped' => 'Expédié',
     'status_delivered' => 'Livré',
     'status_cancelled' => 'Annulé',
@@ -25,7 +27,25 @@ return [
     'delete' => 'Supprimer',
     'preview' => 'Aperçu',
     'download_purchase_order' => 'Télécharger le bon de commande',
-    'total_price' => 'Prix total',
-    'currency' => 'DA',
 
+    'update_status' => 'Mettre à jour le statut',
+
+    'statuses' => [
+        'pending' => 'En attente',
+        'confirmed' => 'Confirmé',
+        'shipped' => 'Expédié',
+        'delivered' => 'Livré',
+        'cancelled' => 'Annulé',
+    ],
+    'payment_statuses' => [
+        'pending' => 'En attente',
+        'po_signed' => 'BC signé',
+        'payment_confirmed' => 'Paiement confirmé',
+        'paid' => 'Payé',
+        'failed' => 'Échoué',
+    ],
+    'payment_methods' => [
+        'offline' => 'Hors ligne',
+        'online' => 'En ligne',
+    ],
 ];
