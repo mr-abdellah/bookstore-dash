@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Book;
+use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -59,7 +60,12 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        $book = Book::with(['author', 'category', 'publishingHouse', 'discount'])->findOrFail($id);
+        $book = Book::with(['author', 'category', 'publishingHouse',])->findOrFail($id);
+        $isFavorite = Auth::check() && Favorite::where('user_id', Auth::id())
+            ->where('book_id', $id)
+            ->exists();
+
+        $book->is_favorite = $isFavorite;
 
         return response()->json([
             'status' => 'success',

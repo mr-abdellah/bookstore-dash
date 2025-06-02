@@ -101,7 +101,14 @@ class FavoriteController extends Controller
      */
     public function delete($id)
     {
-        $favorite = Favorite::findOrFail($id);
+        $favorite = Favorite::where('id', $id)->first();
+
+        if (!$favorite) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Favorite not found'
+            ], 404);
+        }
 
         // Check if the authenticated user owns this favorite
         if ($favorite->user_id !== auth()->id()) {
@@ -116,6 +123,18 @@ class FavoriteController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Favorite removed successfully'
+        ]);
+    }
+
+
+    public function getUserFavorites()
+    {
+        $favorites = Favorite::where('user_id', auth()->id())
+            ->with('book')
+            ->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => $favorites
         ]);
     }
 }

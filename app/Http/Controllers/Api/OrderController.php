@@ -8,13 +8,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Orders\StoreOrderRequest;
 use App\Models\Order;
 use App\Services\Orders\OrderService;
+use App\Services\Orders\PurchaseOrderService;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 
 class OrderController extends Controller
 {
     public function __construct(
         protected OrderService $orderService,
-        protected CalculateOrderTotalAction $calculateOrderTotalAction
+        protected CalculateOrderTotalAction $calculateOrderTotalAction,
+        protected PurchaseOrderService $purchaseOrderService
+
     ) {}
 
     /**
@@ -59,6 +64,54 @@ class OrderController extends Controller
             ], 404);
         }
     }
+
+
+    /**
+     * Download purchase order PDF
+     */
+    public function downloadPdf(string $id): StreamedResponse|JsonResponse
+    {
+        try {
+            $order = Order::with([
+                'items.book',
+                'items.publishingHouse',
+                'user',
+                'wilaya:id,name,arabic_name',
+                'commune:id,name,arabic_name'
+            ])->findOrFail($id);
+
+            return $this->purchaseOrderService->downloadPdf($order);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order not found or PDF generation failed'
+            ], 404);
+        }
+    }
+
+    /**
+     * Stream purchase order PDF (view in browser)
+     */
+    public function streamPdf(string $id): \Symfony\Component\HttpFoundation\Response|JsonResponse
+    {
+        try {
+            $order = Order::with([
+                'items.book',
+                'items.publishingHouse',
+                'user',
+                'wilaya:id,name,arabic_name',
+                'commune:id,name,arabic_name'
+            ])->findOrFail($id);
+
+            return $this->purchaseOrderService->streamPdf($order);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order not found or PDF generation failed'
+            ], 404);
+        }
+    }
+
 
     /**
      * Store a newly created order.

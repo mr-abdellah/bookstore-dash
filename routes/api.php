@@ -73,6 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Favorites management
     Route::prefix('favorites')->group(function () {
+        Route::get('/', [FavoriteController::class, 'getUserFavorites']);
         Route::put('/{id}', [FavoriteController::class, 'update']);
         Route::delete('/{id}', [FavoriteController::class, 'delete']);
     });
@@ -82,6 +83,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [OrderController::class, 'index']);
         Route::get('/{id}', [OrderController::class, 'show']);
         Route::post('/', [OrderController::class, 'store']);
+
+        Route::get('/{id}/download-pdf', [OrderController::class, 'downloadPdf'])
+            ->name('orders.download-pdf');
+
+        Route::get('/{id}/stream-pdf', [OrderController::class, 'streamPdf'])
+            ->name('orders.stream-pdf');
     });
 });
 

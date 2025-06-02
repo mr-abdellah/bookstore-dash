@@ -5,6 +5,7 @@ namespace App\Services\Orders;
 use App\Models\Order;
 use App\Models\PlatformSettings;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Cache;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PurchaseOrderService
@@ -14,16 +15,7 @@ class PurchaseOrderService
      */
     public function generateHtml(Order $order): string
     {
-        return View::make('purchase-order.template', [
-            'order' => $order,
-            'orderNumber' => $this->generateOrderNumber($order),
-            'orderDate' => $order->created_at->format('d/m/Y'),
-            'supplier' => $this->getSupplierInfo(),
-            'client' => $this->getClientInfo($order),
-            'items' => $this->getOrderItems($order),
-            'totals' => $this->calculateTotals($order),
-            'conditions' => $this->getOrderConditions(),
-        ])->render();
+        return View::make('purchase-order.template', $this->getViewData($order))->render();
     }
 
     /**
@@ -31,33 +23,32 @@ class PurchaseOrderService
      */
     public function generatePdf(Order $order): \Barryvdh\DomPDF\PDF
     {
-        mb_internal_encoding('UTF-8');
-
-        $html = mb_convert_encoding(
-            View::make('purchase-order.template', [
-                'order' => $order,
-                'orderNumber' => $this->generateOrderNumber($order),
-                'orderDate' => $order->created_at->format('d/m/Y'),
-                'supplier' => $this->getSupplierInfo(),
-                'client' => $this->getClientInfo($order),
-                'items' => $this->getOrderItems($order),
-                'totals' => $this->calculateTotals($order),
-                'conditions' => $this->getOrderConditions(),
-            ])->render(),
-            'HTML-ENTITIES',
-            'UTF-8'
-        );
+        $html = $this->generateHtml($order);
 
         return Pdf::loadHTML($html)
             ->setPaper('a4', 'portrait')
             ->setOptions([
-                'isRemoteEnabled' => true,
+                'isRemoteEnabled' => false, // Disable remote resources for security and performance
                 'isHtml5ParserEnabled' => true,
                 'chroot' => public_path(),
                 'encoding' => 'UTF-8',
+                'defaultFont' => 'Arial',
+                'fontSubsetting' => true,
+                'isFontSubsettingEnabled' => true,
+                'debugKeepTemp' => false,
+                'debugCss' => false,
+                'debugLayout' => false,
+                'debugLayoutLines' => false,
+                'debugLayoutBlocks' => false,
+                'debugLayoutInline' => false,
+                'debugLayoutPaddingBox' => false,
+                'tempDir' => storage_path('app/temp'),
+                'fontDir' => storage_path('fonts/'),
+                'fontCache' => storage_path('fonts/'),
+                'logOutputFile' => storage_path('logs/dompdf.log'),
+                'isPhpEnabled' => false, // Disable PHP execution for security
             ]);
     }
-
 
     /**
      * Download purchase order PDF
@@ -68,12 +59,11 @@ class PurchaseOrderService
         $filename = "bon-commande-{$order->id}.pdf";
 
         return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->stream();
+            echo $pdf->output();
         }, $filename, [
             'Content-Type' => 'application/pdf',
         ]);
     }
-
 
     /**
      * Stream purchase order PDF (view in browser)
@@ -83,7 +73,27 @@ class PurchaseOrderService
         $pdf = $this->generatePdf($order);
         $filename = "bon-commande-{$order->id}.pdf";
 
-        return $pdf->stream($filename);
+        return response($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+        ]);
+    }
+
+    /**
+     * Get all view data for the PDF template
+     */
+    private function getViewData(Order $order): array
+    {
+        return [
+            'order' => $order,
+            'orderNumber' => $this->generateOrderNumber($order),
+            'orderDate' => $order->created_at->format('d/m/Y'),
+            'supplier' => $this->getSupplierInfo(),
+            'client' => $this->getClientInfo($order),
+            'items' => $this->getOrderItems($order),
+            'totals' => $this->calculateTotals($order),
+            'conditions' => $this->getOrderConditions(),
+        ];
     }
 
     /**
@@ -95,41 +105,35 @@ class PurchaseOrderService
     }
 
     /**
-     * Get supplier information
+     * Get supplier information with caching
      */
     private function getSupplierInfo(): array
     {
-        $settings = PlatformSettings::first() ?? new PlatformSettings();
+        return Cache::remember('supplier_info', 3600, function () {
+            $settings = PlatformSettings::first();
 
-        return [
-            'name' => $settings->platform_name ?? 'Media Tech SARL',
-            'address' => $settings->address ?? '123 Rue des Livres',
-            'city' => $settings->city ?? 'Alger, 16000',
-            'phone' => $settings->contact_phone ?? '021 12 34 56',
-            'email' => $settings->contact_email ?? 'contact@mediatech.dz',
-            'logo' => $settings->logo ? asset('storage/' . $settings->logo) : asset('images/logo.png'),
-        ];
+            return [
+                'name' => $settings?->platform_name ?? 'Media Tech SARL',
+                'address' => $settings?->address ?? '123 Rue des Livres',
+                'city' => $settings?->city ?? 'Alger, 16000',
+                'phone' => $settings?->contact_phone ?? '021 12 34 56',
+                'email' => $settings?->contact_email ?? 'contact@mediatech.dz',
+                'logo' => $settings?->logo ? asset('storage/' . $settings->logo) : asset('images/logo.png'),
+            ];
+        });
     }
-
 
     /**
      * Get client information from order
      */
     private function getClientInfo(Order $order): array
     {
-        // Clean and encode text fields
-        $firstName = mb_convert_encoding($order->first_name ?? '', 'UTF-8', 'UTF-8');
-        $lastName = mb_convert_encoding($order->last_name ?? '', 'UTF-8', 'UTF-8');
-        $address = mb_convert_encoding($order->address ?? '', 'UTF-8', 'UTF-8');
-        $commune = mb_convert_encoding($order->commune ?? '', 'UTF-8', 'UTF-8');
-        $wilaya = mb_convert_encoding($order->wilaya ?? '', 'UTF-8', 'UTF-8');
-
         return [
-            'name' => trim($firstName . ' ' . $lastName),
-            'address' => $address,
-            'city' => trim($commune . ', ' . $wilaya),
+            'name' => trim(($order->first_name ?? '') . ' ' . ($order->last_name ?? '')),
+            'address' => $order->address ?? '',
+            'city' => trim(($order->commune->name ?? '') . ', ' . ($order->wilaya->name ?? '')),
             'phone' => $order->phone ?? 'N/A',
-            'email' => $order->user->email ?? 'N/A',
+            'email' => $order->user?->email ?? 'N/A',
         ];
     }
 
@@ -139,13 +143,9 @@ class PurchaseOrderService
     private function getOrderItems(Order $order): array
     {
         return $order->items->map(function ($item, $index) {
-            // Clean and encode the title properly
-            $title = $item->book->title ?? 'Produit sans titre';
-            $title = mb_convert_encoding($title, 'UTF-8', 'UTF-8');
-
             return [
                 'ref' => 'LIV-' . str_pad($index + 1, 3, '0', STR_PAD_LEFT),
-                'description' => $title,
+                'description' => $item->book?->title ?? 'Produit sans titre',
                 'quantity' => $item->quantity,
                 'unit_price' => number_format($item->unit_price, 2, ',', ' '),
                 'total' => number_format($item->unit_price * $item->quantity, 2, ',', ' '),
