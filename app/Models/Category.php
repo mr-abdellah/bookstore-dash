@@ -21,6 +21,18 @@ class Category extends Model
         'publishing_house_id'
     ];
 
+    protected static function booted(): void
+    {
+        static::creating(function ($category) {
+            $category->slug = str($category->name_en)->slug();
+        });
+
+        static::updating(function ($category) {
+            $category->slug = str($category->name_en)->slug();
+        });
+    }
+
+
     public function publishingHouse()
     {
         return $this->belongsTo(PublishingHouse::class);

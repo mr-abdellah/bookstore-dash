@@ -41,30 +41,30 @@ class SetupAccount extends Page implements HasForms, HasActions
                 Grid::make(2)
                     ->schema([
                         TextInput::make('name')
-                            ->label('Publishing House Name')
+                            ->label(__('setup-account.form.name'))
                             ->required()
                             ->maxLength(255),
                         TextInput::make('email')
-                            ->label('Email')
+                            ->label(__('setup-account.form.email'))
                             ->email()
                             ->maxLength(255),
                         TextInput::make('phone')
-                            ->label('Phone')
+                            ->label(__('setup-account.form.phone'))
                             ->tel()
                             ->maxLength(255),
                         TextInput::make('address')
-                            ->label('Address')
+                            ->label(__('setup-account.form.address'))
                             ->maxLength(255),
                         TextInput::make('website')
-                            ->label('Website')
+                            ->label(__('setup-account.form.website'))
                             ->url()
                             ->maxLength(255),
                         TextInput::make('established_year')
-                            ->label('Established Year')
+                            ->label(__('setup-account.form.established_year'))
                             ->type('date')
                             ->maxLength(255),
                         TextInput::make('description')
-                            ->label('Description')
+                            ->label(__('setup-account.form.description'))
                             ->maxLength(65535),
                     ]),
             ])
@@ -74,12 +74,12 @@ class SetupAccount extends Page implements HasForms, HasActions
     public function setupAccount(): Action
     {
         return Action::make('setupAccount')
-            ->label('Create Publishing House')
+            ->label(__('setup-account.button.create'))
             ->color('success')
-            ->modalHeading('Welcome to Kotobi')
-            ->modalDescription('Set up your publishing house to get started.')
+            ->modalHeading(__('setup-account.modal.heading'))
+            ->modalDescription(__('setup-account.modal.description'))
             ->modalCancelAction(false)
-            ->modalSubmitActionLabel('Submit')
+            ->modalSubmitActionLabel(__('setup-account.modal.submit'))
             ->closeModalByClickingAway(false)
             ->closeModalByEscaping(false)
             ->modalCloseButton(false)
@@ -87,30 +87,30 @@ class SetupAccount extends Page implements HasForms, HasActions
                 Grid::make(2)
                     ->schema([
                         TextInput::make('name')
-                            ->label('Publishing House Name')
+                            ->label(__('setup-account.form.name'))
                             ->required()
                             ->maxLength(255),
                         TextInput::make('email')
-                            ->label('Email')
+                            ->label(__('setup-account.form.email'))
                             ->email()
                             ->maxLength(255),
                         TextInput::make('phone')
-                            ->label('Phone')
+                            ->label(__('setup-account.form.phone'))
                             ->tel()
                             ->maxLength(255),
                         TextInput::make('address')
-                            ->label('Address')
+                            ->label(__('setup-account.form.address'))
                             ->maxLength(255),
                         TextInput::make('website')
-                            ->label('Website')
+                            ->label(__('setup-account.form.website'))
                             ->url()
                             ->maxLength(255),
                         TextInput::make('established_year')
-                            ->label('Established Year')
+                            ->label(__('setup-account.form.established_year'))
                             ->type('date')
                             ->maxLength(255),
                         Textarea::make('description')
-                            ->label('Description')
+                            ->label(__('setup-account.form.description'))
                             ->maxLength(65535)
                             ->columnSpanFull(),
                     ]),
@@ -119,12 +119,12 @@ class SetupAccount extends Page implements HasForms, HasActions
                 $user = Auth::user();
                 PublishingHouse::create([
                     'name' => $data['name'],
-                    'email' => $data['email'] ?? null,
-                    'phone' => $data['phone'] ?? null,
-                    'address' => $data['address'] ?? null,
-                    'website' => $data['website'] ?? null,
-                    'established_year' => $data['established_year'] ?? null,
-                    'description' => $data['description'] ?? null,
+                    'email' => $data['email'] ?? '',
+                    'phone' => $data['phone'] ?? '',
+                    'address' => $data['address'] ?? '',
+                    'website' => $data['website'] ?? '',
+                    'established_year' => $data['established_year'] ?? '',
+                    'description' => $data['description'] ?? '',
                     'status' => 'active',
                     'owner_id' => $user->id,
                 ]);

@@ -71,9 +71,6 @@ class AuthorResource extends Resource
     {
         return $table
             ->columns([
-
-
-
                 TextColumn::make('name')
                     ->label(__('author.name'))
                     ->searchable()

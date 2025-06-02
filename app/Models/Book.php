@@ -30,7 +30,9 @@ class Book extends Model
 
     protected $casts = [
         'price' => 'decimal:2',
+        'images' => 'array',
     ];
+
 
     public function getImagesAttribute($value)
     {

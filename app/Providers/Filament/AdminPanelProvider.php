@@ -8,28 +8,19 @@ use App\Filament\Widgets\EarningsChartWidget;
 use App\Filament\Widgets\EarningsOverviewWidget;
 use App\Filament\Widgets\EarningsTableWidget;
 use App\Filament\Widgets\InventoryTurnoverWidget;
-use App\Filament\Widgets\MonthlyOrderTrendWidget;
-use App\Filament\Widgets\PublishingHousePerformanceWidget;
-use App\Filament\Widgets\StockAtRiskWidget;
-use App\Filament\Widgets\TopSellingBooksWidget;
-use App\Filament\Widgets\TotalRevenueWidget;
-use App\Filament\Widgets\UserEngagementWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Filament\Facades\Filament;
 use TomatoPHP\FilamentLanguageSwitcher\FilamentLanguageSwitcherPlugin;
 
 
