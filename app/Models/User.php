@@ -35,6 +35,14 @@ class User extends Authenticatable implements FilamentUser, HasName, HasAvatar
 
     public function canAccessPanel(Panel $panel): bool
     {
+        if ($panel->getId() === 'admin') {
+            return $this->role === 'admin';
+        }
+
+        if ($panel->getId() === 'publishing-houses') {
+            return $this->role === 'publisher';
+        }
+
         return true;
     }
 
@@ -63,5 +71,15 @@ class User extends Authenticatable implements FilamentUser, HasName, HasAvatar
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function publishingHouses()
+    {
+        return $this->hasMany(PublishingHouse::class, 'owner_id');
+    }
+
+    public function publishingHouse()
+    {
+        return $this->hasOne(PublishingHouse::class, 'owner_id')->latestOfMany();
     }
 }
