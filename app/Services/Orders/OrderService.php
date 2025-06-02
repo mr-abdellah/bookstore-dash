@@ -25,6 +25,7 @@ class OrderService
     public function getUserOrders(User $user, int $perPage = 15): LengthAwarePaginator
     {
         return $user->orders()
+            ->with(['wilaya:id,name', 'commune:id,name'])
             ->withCount(['items as total' => function ($query) {
                 $query->select(DB::raw('SUM(unit_price * quantity)'));
             }])
@@ -40,7 +41,9 @@ class OrderService
         return $order->load([
             'items.book',
             'items.publishingHouse',
-            'user:id,first_name,last_name,email'
+            'user:id,first_name,last_name,email',
+            'wilaya:id,name',
+            'commune:id,name'
         ]);
     }
 
@@ -53,8 +56,8 @@ class OrderService
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'phone' => $data['phone'],
-            'wilaya' => $data['wilaya'],
-            'commune' => $data['commune'],
+            'wilaya_id' => $data['wilaya_id'],
+            'commune_id' => $data['commune_id'],
             'address' => $data['address'],
             'order_status' => $data['order_status'] ?? OrderStatus::PENDING,
             'payment_status' => $data['payment_status'] ?? PaymentStatus::PENDING,

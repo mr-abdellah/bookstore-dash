@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->string('first_name');
             $table->string('last_name');
             $table->string('phone');
-            $table->string('wilaya');
-            $table->string('commune');
+            $table->foreignId('wilaya_id')->constrained('wilayas');
+            $table->foreignId('commune_id')->constrained('communes');
             $table->text('address');
             $table->string('order_status')->default('pending');
             $table->string('payment_status')->default('pending');

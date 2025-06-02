@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\CategoryController;
@@ -50,6 +51,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // User info
     Route::get('/user', function (Request $request) {
         return $request->user();
+    });
+
+    // address
+    Route::prefix('address')->group(function () {
+        Route::get('/wilayas', [AddressController::class, 'wilayas']);
+        Route::get('/communes/{wilayaId}', [AddressController::class, 'communes']);
     });
 
     // Book reviews

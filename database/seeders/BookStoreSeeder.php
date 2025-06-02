@@ -236,7 +236,7 @@ class BookStoreSeeder extends Seeder
         $this->command->info('- 1 Order with 3 OrderItems');
     }
 
-    public function run()
+    public function rdfun()
     {
         $client = User::where('role', 'client')->inRandomOrder()->first();
         $books = Book::inRandomOrder()->take(20)->get();
@@ -273,5 +273,69 @@ class BookStoreSeeder extends Seeder
         }
 
         $this->command->info('✅ Created 1 order with 20 order items.');
+    }
+
+    public function run()
+    {
+        // Delete all books, orders, and order items
+        OrderItem::truncate();
+        Order::truncate();
+        Book::truncate();
+        Stock::truncate();
+
+        // Fetch existing authors, categories, and publishing houses
+        $authors = Author::all();
+        $categories = Category::all();
+        $publishingHouses = PublishingHouse::all();
+
+        // Book genres and titles
+        $bookGenres = ['Mystery', 'Romance', 'Thriller', 'Adventure', 'Drama', 'Comedy', 'Horror', 'Fantasy', 'Sci-Fi', 'Historical'];
+        $bookTitles = [
+            'The Silent Observer',
+            'Midnight Dreams',
+            'Golden Horizon',
+            'Whispers in the Dark',
+            'The Last Journey',
+            'Broken Chains',
+            'Rising Sun',
+            'Hidden Secrets',
+            'Eternal Love',
+            'The Final Chapter'
+        ];
+
+        // Create Books with price >= 1000 DA
+        foreach ($authors as $authorIndex => $author) {
+            for ($bookIndex = 0; $bookIndex < 10; $bookIndex++) {
+                $categoryIndex = $bookIndex % count($categories);
+                $genre = $bookGenres[$bookIndex];
+                $baseTitle = $bookTitles[$bookIndex];
+
+                Book::create([
+                    'author_id' => $author->id,
+                    'category_id' => $categories[$categoryIndex]->id,
+                    'publishing_house_id' => $author->publishing_house_id,
+                    'title' => $baseTitle . ' - ' . $genre,
+                    'description' => "An engaging {$genre} novel.",
+                    'price' => rand(1000, 5000) + (rand(0, 99) / 100), // Price >= 1000 DA
+                    'language' => ['English', 'French', 'Arabic'][rand(0, 2)],
+                    'dimensions' => '6 x 9 inches',
+                    'pages_count' => rand(200, 500),
+                    'images' => json_encode(['book_image_1.jpg', 'book_image_2.jpg']), // Encode array as JSON
+                    'cover' => 'book_cover_' . ($authorIndex + 1) . '_' . ($bookIndex + 1) . '.jpg'
+                ]);
+            }
+        }
+
+        // Seed Stock for new books
+        foreach (Book::all() as $book) {
+            Stock::create([
+                'book_id' => $book->id,
+                'quantity' => rand(10, 100),
+                'publishing_house_id' => $book->publishing_house_id,
+            ]);
+        }
+
+        $this->command->info('✅ Deleted all books, orders, and order items.');
+        $this->command->info('✅ Created 100 books with price >= 1000 DA and their stock.');
     }
 }

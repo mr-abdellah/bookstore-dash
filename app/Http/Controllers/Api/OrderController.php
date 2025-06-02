@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Orders\CalculateOrderTotalAction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Orders\StoreOrderRequest;
-use App\Http\Requests\Orders\UpdateOrderRequest;
 use App\Models\Order;
 use App\Services\Orders\OrderService;
 use Illuminate\Http\JsonResponse;
@@ -13,7 +13,8 @@ use Illuminate\Http\JsonResponse;
 class OrderController extends Controller
 {
     public function __construct(
-        protected OrderService $orderService
+        protected OrderService $orderService,
+        protected CalculateOrderTotalAction $calculateOrderTotalAction
     ) {}
 
     /**
@@ -38,8 +39,14 @@ class OrderController extends Controller
             $order = Order::with([
                 'items.book',
                 'items.publishingHouse',
-                'user'
+                'user',
+                'wilaya:id,name,arabic_name',
+                'commune:id,name,arabic_name'
             ])->findOrFail($id);
+
+            $orderTotals = $this->calculateOrderTotalAction->execute($order);
+
+            $order->total = $orderTotals;
 
             return response()->json([
                 'success' => true,

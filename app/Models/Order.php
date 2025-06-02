@@ -9,6 +9,8 @@ use App\Traits\GeneratesOrderReference;
 use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Kossa\AlgerianCities\Commune;
+use Kossa\AlgerianCities\Wilaya;
 
 class Order extends Model
 {
@@ -25,8 +27,8 @@ class Order extends Model
         'first_name',
         'last_name',
         'phone',
-        'wilaya',
-        'commune',
+        'wilaya_id',
+        'commune_id',
         'address',
         'order_status',
         'payment_status',
@@ -38,6 +40,16 @@ class Order extends Model
         'payment_status' => PaymentStatus::class,
         'payment_method' => PaymentMethod::class,
     ];
+
+    public function wilaya()
+    {
+        return $this->belongsTo(Wilaya::class);
+    }
+
+    public function commune()
+    {
+        return $this->belongsTo(Commune::class);
+    }
 
     public function user()
     {
