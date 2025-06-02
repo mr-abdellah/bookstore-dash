@@ -9,10 +9,12 @@ use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers\ItemsRelationManager;
 use App\Models\Order;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Set;
 use Filament\Infolists;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Infolist;
@@ -23,6 +25,8 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\ViewAction;
+use Kossa\AlgerianCities\Commune;
+use Kossa\AlgerianCities\Wilaya;
 
 class OrderResource extends Resource
 {
@@ -56,9 +60,10 @@ class OrderResource extends Resource
                             ->label(fn() => __('order.last_name')),
                         Infolists\Components\TextEntry::make('phone')
                             ->label(fn() => __('order.phone')),
-                        Infolists\Components\TextEntry::make('wilaya')
+                        // Fixed: Access the relationship and get the name
+                        Infolists\Components\TextEntry::make('wilaya.name')
                             ->label(fn() => __('order.wilaya')),
-                        Infolists\Components\TextEntry::make('commune')
+                        Infolists\Components\TextEntry::make('commune.name')
                             ->label(fn() => __('order.commune')),
                         Infolists\Components\TextEntry::make('address')
                             ->label(fn() => __('order.address')),
@@ -111,15 +116,31 @@ class OrderResource extends Resource
                     ->required()
                     ->maxLength(191),
 
-                TextInput::make('wilaya')
+                Select::make('wilaya_id')
+                    ->options(Wilaya::all()->pluck('name', 'id'))
                     ->label(fn() => __('order.wilaya'))
+                    ->live()
                     ->required()
-                    ->maxLength(191),
+                    ->searchable()
+                    ->afterStateUpdated(function (Set $set) {
+                        $set('commune_id', null); // Reset commune when wilaya changes
+                    }),
 
-                TextInput::make('commune')
+                Select::make('commune_id')
+                    ->options(function (Get $get) {
+                        $wilayaId = $get('wilaya_id');
+
+                        if (!$wilayaId) {
+                            return [];
+                        }
+
+                        return Commune::where('wilaya_id', $wilayaId)
+                            ->pluck('name', 'id');
+                    })
                     ->label(fn() => __('order.commune'))
                     ->required()
-                    ->maxLength(191),
+                    ->searchable()
+                    ->disabled(fn(Get $get) => !$get('wilaya_id')), // Disable until wilaya is selected
 
                 Textarea::make('address')
                     ->label(fn() => __('order.address'))
@@ -161,11 +182,12 @@ class OrderResource extends Resource
                     ->label(fn() => __('order.phone'))
                     ->searchable(),
 
-                TextColumn::make('wilaya')
+                // Fixed: Access the relationship and get the name
+                TextColumn::make('wilaya.name')
                     ->label(fn() => __('order.wilaya'))
                     ->searchable(),
 
-                TextColumn::make('commune')
+                TextColumn::make('commune.name')
                     ->label(fn() => __('order.commune'))
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -325,7 +347,7 @@ class OrderResource extends Resource
 
     public static function eagerLoadForIndex(): array
     {
-        return ['items.book.publishingHouse'];
+        return ['items.book.publishingHouse', 'wilaya', 'commune']; // Added wilaya and commune
     }
 
     public static function getPages(): array
