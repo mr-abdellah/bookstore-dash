@@ -33,6 +33,7 @@ class Order extends Model
         'order_status',
         'payment_status',
         'payment_method',
+        'publishing_house_id',
     ];
 
     protected $casts = [
@@ -59,6 +60,11 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function publishingHouse()
+    {
+        return $this->belongsTo(PublishingHouse::class);
     }
 
     // Dynamic subtotal (books only)
