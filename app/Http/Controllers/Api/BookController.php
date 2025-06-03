@@ -60,7 +60,10 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        $book = Book::with(['author', 'category', 'publishingHouse',])->findOrFail($id);
+        $book = Book::with(['author', 'category', 'publishingHouse'])->findOrFail($id);
+
+        $book->author->avatar = $book->author->avatar ? asset('storage/' . $book->author->avatar) : null;
+
         $isFavorite = Auth::check() && Favorite::where('user_id', Auth::id())
             ->where('book_id', $id)
             ->exists();
@@ -72,6 +75,7 @@ class BookController extends Controller
             'data' => $book
         ]);
     }
+
 
     /**
      * Get related books for a specific book.
