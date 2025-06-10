@@ -26,12 +26,17 @@ class ViewOrder extends ViewRecord
                 ->action(function ($record) {
                     $record->update(['order_status' => OrderStatus::CONFIRMED]);
 
-                    // Update all order items to confirmed status
                     $record->items()->update([
                         'status' => OrderStatus::CONFIRMED,
                         'confirmed_at' => now(),
                         'confirmed_by' => Auth::id(),
                     ]);
+
+                    foreach ($record->items as $item) {
+                        if ($item->book && $item->quantity > 0) {
+                            $item->book->decrement('quantity', $item->quantity);
+                        }
+                    }
                 })
                 ->requiresConfirmation(),
 

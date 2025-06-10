@@ -21,7 +21,7 @@ return [
     'discount_name' => 'Remise',
     'created_at' => 'Créé le',
     'updated_at' => 'Mis à jour le',
-
+    'quantity' => 'Quantité',
     // languages
     'English' => 'Anglais',
     'French' => 'Français',

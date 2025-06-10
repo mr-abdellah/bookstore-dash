@@ -21,7 +21,7 @@ return [
     'discount_name' => 'Discount',
     'created_at' => 'Created At',
     'updated_at' => 'Updated At',
-
+    'quantity' => 'Quantity',
     // languages
     'English' => 'English',
     'French' => 'French',

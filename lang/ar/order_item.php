@@ -25,4 +25,8 @@ return [
     'total_price' => 'السعر الإجمالي',
     'currency' => 'دج',
     'view_book' => 'عرض الكتاب',
+    'mark_as_shipped' => 'تأكيد الشحن',
+    'new_orders' => 'الطلبات الجديدة',
+    'confirmed_orders' => 'الطلبات المؤكدة',
+    'total_sold_books' => 'إجمالي الكتب المباعة',
 ];

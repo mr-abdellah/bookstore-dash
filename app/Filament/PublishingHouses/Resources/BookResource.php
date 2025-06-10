@@ -74,6 +74,11 @@ class BookResource extends Resource
                     ->numeric()
                     ->suffix('DA'),
 
+                TextInput::make('quantity')
+                    ->label(fn() => __('book.quantity'))
+                    ->required()
+                    ->numeric(),
+
                 Select::make('language')
                     ->label(fn() => __('book.language'))
                     ->options([
@@ -152,6 +157,11 @@ class BookResource extends Resource
                     ->label(fn() => __('book.category_name'))
                     ->searchable()
                     ->placeholder('N/A'),
+
+                Tables\Columns\TextColumn::make('quantity')
+                    ->label(fn() => __('book.quantity'))
+                    ->numeric(),
+
 
                 Tables\Columns\TextColumn::make('publishingHouse.name')
                     ->label(fn() => __('book.publishing_house_name'))

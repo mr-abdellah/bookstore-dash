@@ -25,4 +25,8 @@ return [
     'total_price' => 'Prix total',
     'currency' => 'DA',
     'view_book' => 'Voir le livre',
+    'mark_as_shipped' => 'Marquer comme expédié',
+    'new_orders' => 'Nouvelles commandes',
+    'confirmed_orders' => 'Commandes confirmées',
+    'total_sold_books' => 'Total des livres vendus',
 ];

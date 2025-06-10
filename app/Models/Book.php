@@ -26,6 +26,7 @@ class Book extends Model
         'pages_count',
         'images',
         'cover',
+        'quantity'
     ];
 
     protected $casts = [

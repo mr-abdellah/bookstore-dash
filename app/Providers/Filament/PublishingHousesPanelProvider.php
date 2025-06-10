@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\PublishingHouses\Pages\Auth\Register;
+use App\Filament\Widgets\TotalOrdersStats;
 use App\Http\Middleware\CheckUserPublishingHouse;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -29,7 +30,7 @@ class PublishingHousesPanelProvider extends PanelProvider
             ->id('publishing-houses')
             ->path('publisher')
             ->colors([
-                'primary' => Color::Red,
+                'primary' => Color::Blue,
             ])
             ->discoverResources(in: app_path('Filament/PublishingHouses/Resources'), for: 'App\\Filament\\PublishingHouses\\Resources')
             ->discoverPages(in: app_path('Filament/PublishingHouses/Pages'), for: 'App\\Filament\\PublishingHouses\\Pages')
@@ -42,8 +43,7 @@ class PublishingHousesPanelProvider extends PanelProvider
             ->emailVerification()
             ->discoverWidgets(in: app_path('Filament/PublishingHouses/Widgets'), for: 'App\\Filament\\PublishingHouses\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                TotalOrdersStats::class,
             ])
             ->middleware([
                 EncryptCookies::class,

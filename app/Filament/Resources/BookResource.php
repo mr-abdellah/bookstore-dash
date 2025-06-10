@@ -56,12 +56,6 @@ class BookResource extends Resource
                     ->preload()
                     ->nullable(),
 
-                Forms\Components\Select::make('discount_id')
-                    ->label(fn() => __('book.discount'))
-                    ->relationship('discount', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->nullable(),
 
                 Forms\Components\TextInput::make('title')
                     ->label(fn() => __('book.title'))
@@ -77,6 +71,11 @@ class BookResource extends Resource
                     ->required()
                     ->numeric()
                     ->suffix('DA'),
+
+                Forms\Components\TextInput::make('quantity')
+                    ->label(fn() => __('book.quantity'))
+                    ->required()
+                    ->numeric(),
 
                 Forms\Components\Select::make('language')
                     ->label(fn() => __('book.language'))
@@ -125,7 +124,7 @@ class BookResource extends Resource
                     ->label(fn() => __('book.pages_count'))
                     ->numeric()
                     ->default(null),
-                
+
                 Forms\Components\FileUpload::make('cover')
                     ->label(fn() => __('book.cover'))
                     ->image()
@@ -133,7 +132,7 @@ class BookResource extends Resource
                     ->imageResizeMode('cover')
                     ->imageCropAspectRatio('2:3')
                     ->directory('books/covers'),
-                
+
                 Forms\Components\FileUpload::make('images')
                     ->label(fn() => __('book.images'))
                     ->multiple()
@@ -156,6 +155,10 @@ class BookResource extends Resource
                     ->label(fn() => __('book.category_name'))
                     ->searchable()
                     ->placeholder('N/A'),
+
+                Tables\Columns\TextColumn::make('quantity')
+                    ->label(fn() => __('book.quantity'))
+                    ->numeric(),
 
                 Tables\Columns\TextColumn::make('publishingHouse.name')
                     ->label(fn() => __('book.publishing_house_name'))

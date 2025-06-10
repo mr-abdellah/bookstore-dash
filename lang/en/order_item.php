@@ -25,4 +25,7 @@ return [
     'total_price' => 'Total Price',
     'currency' => 'DA',
     'view_book' => 'View Book',
+    'mark_as_shipped' => 'Mark as Shipped',
+    'new_orders' => 'New Orders',
+    'confirmed_orders' => 'Confirmed Orders',
 ];

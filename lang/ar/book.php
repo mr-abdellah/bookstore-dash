@@ -22,7 +22,7 @@ return [
     'discount_name' => 'الخصم',
     'created_at' => 'تاريخ الإنشاء',
     'updated_at' => 'تاريخ التحديث',
-
+    'quantity' => 'الكمية',
     // languages
     'English' => 'الإنجليزية',
     'French' => 'الفرنسية',

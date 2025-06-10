@@ -18,7 +18,7 @@ class BookController extends Controller
      */
     public function all(Request $request)
     {
-        $query = Book::query();
+        $query = Book::where('quantity', '>', 0);
 
         // Apply filters
         if ($request->has('author_id')) {
@@ -51,6 +51,7 @@ class BookController extends Controller
             ]
         ]);
     }
+
 
     /**
      * Display the specified book with all details.
