@@ -29,4 +29,8 @@ return [
     'new_orders' => 'الطلبات الجديدة',
     'confirmed_orders' => 'الطلبات المؤكدة',
     'total_sold_books' => 'إجمالي الكتب المباعة',
+    'total_pending_payouts' => 'إجمالي المدفوعات المعلقة',
+    'total_new_orders' => 'إجمالي الطلبات الجديدة',
+    'total_revenue' => 'إجمالي الإيرادات',
+    'total_orders' => 'إجمالي الطلبات',
 ];

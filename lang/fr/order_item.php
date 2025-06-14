@@ -29,4 +29,9 @@ return [
     'new_orders' => 'Nouvelles commandes',
     'confirmed_orders' => 'Commandes confirmées',
     'total_sold_books' => 'Total des livres vendus',
+    'total_pending_payouts' => 'Total des paiements en attente',
+    'total_new_orders' => 'Total des nouvelles commandes',
+    'total_revenue' => 'Revenu total',
+    'total_orders' => 'Total des commandes',
+
 ];

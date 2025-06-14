@@ -3,6 +3,9 @@
 namespace App\Providers\Filament;
 
 use App\Filament\PublishingHouses\Pages\Auth\Register;
+use App\Filament\PublishingHouses\Widgets\PayoutsOverview;
+use App\Filament\Widgets\OrderItemChart;
+use App\Filament\Widgets\TotalDeliveredOrdersStats;
 use App\Filament\Widgets\TotalOrdersStats;
 use App\Http\Middleware\CheckUserPublishingHouse;
 use Filament\Http\Middleware\Authenticate;
@@ -43,7 +46,10 @@ class PublishingHousesPanelProvider extends PanelProvider
             ->emailVerification()
             ->discoverWidgets(in: app_path('Filament/PublishingHouses/Widgets'), for: 'App\\Filament\\PublishingHouses\\Widgets')
             ->widgets([
+                TotalDeliveredOrdersStats::class,
                 TotalOrdersStats::class,
+                PayoutsOverview::class,
+                OrderItemChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,

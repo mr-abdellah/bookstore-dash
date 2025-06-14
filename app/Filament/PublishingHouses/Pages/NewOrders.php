@@ -3,6 +3,7 @@
 namespace App\Filament\PublishingHouses\Pages;
 
 use App\Enums\OrderStatus;
+use App\Filament\Widgets\TotalOrdersStats;
 use Filament\Pages\Page;
 use Filament\Tables;
 use Filament\Tables\Actions\BulkAction;
@@ -11,6 +12,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use App\Models\OrderItem;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Contracts\Support\Htmlable;
 
 class NewOrders extends Page implements HasTable
 {
@@ -18,6 +20,11 @@ class NewOrders extends Page implements HasTable
 
     protected static ?string $navigationIcon = 'heroicon-o-clock';
     protected static string $view = 'filament.publishing-houses.pages.new-orders';
+
+    public function getTitle(): string|Htmlable
+    {
+        return __('order_item.new_orders');
+    }
 
     public static function getNavigationLabel(): string
     {
@@ -32,6 +39,13 @@ class NewOrders extends Page implements HasTable
     public static function getNavigationBadge(): ?string
     {
         return (string) OrderItem::where('status', OrderStatus::CONFIRMED)->count();
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            TotalOrdersStats::class
+        ];
     }
 
     public function table(Tables\Table $table): Tables\Table
@@ -89,6 +103,7 @@ class NewOrders extends Page implements HasTable
                             }
                         }
                     }),
-            ]);;
+            ]);
+        ;
     }
 }

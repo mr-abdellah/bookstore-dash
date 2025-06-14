@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\OrderItem;
+use App\Observers\OrderItemObserver;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -15,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        OrderItem::observe(OrderItemObserver::class);
         FilamentView::registerRenderHook(
             'panels::head.end',
             fn(): string => <<<'HTML'

@@ -28,4 +28,9 @@ return [
     'mark_as_shipped' => 'Mark as Shipped',
     'new_orders' => 'New Orders',
     'confirmed_orders' => 'Confirmed Orders',
+    'total_sold_books' => 'Total Sold Books',
+    'total_pending_payouts' => 'Total Pending Payouts',
+    'total_new_orders' => 'Total New Orders',
+    'total_revenue' => 'Total Revenue',
+    'total_orders' => 'Total Orders',
 ];

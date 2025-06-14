@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('books', function (Blueprint $table) {
@@ -20,8 +19,9 @@ return new class extends Migration
             $table->string('language')->nullable();
             $table->string('dimensions')->nullable();
             $table->integer('pages_count')->nullable();
+            $table->integer('quantity')->default(0);
             $table->json('images')->nullable();
-            $table->string('cover')->nullable(); // Added cover field
+            $table->string('cover')->nullable();
             $table->timestamps();
 
             $table->foreign('author_id')
