@@ -16,7 +16,10 @@ class DiscountResource extends Resource
 {
     protected static ?string $model = Discount::class;
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
-
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
     public static function getLabel(): ?string
     {
         return __('sidebar.discounts');

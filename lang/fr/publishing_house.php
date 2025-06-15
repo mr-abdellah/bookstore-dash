@@ -14,4 +14,6 @@ return [
     'logo' => 'Logo',
     'description' => 'Description',
     'social_links' => 'Liens Sociaux',
+    'pending_payouts' => 'Paiements en attente',
+    'sent_payouts' => 'Paiements envoyés',
 ];

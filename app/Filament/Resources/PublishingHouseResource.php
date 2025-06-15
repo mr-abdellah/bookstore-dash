@@ -24,6 +24,11 @@ class PublishingHouseResource extends Resource
     protected static ?string $model = PublishingHouse::class;
     protected static ?string $navigationIcon = 'heroicon-o-building-library';
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with('payouts');
+    }
+
     public static function getLabel(): ?string
     {
         return __('sidebar.publishing_houses');
@@ -136,13 +141,36 @@ class PublishingHouseResource extends Resource
                     ->label(fn() => __('publishing_house.phone'))
                     ->searchable(),
 
+                TextColumn::make('pending_payouts')
+                    ->label(fn() => __('publishing_house.pending_payouts'))
+                    ->getStateUsing(fn($record) => $record->getPendingPayoutTotal())
+                    ->formatStateUsing(fn($state) => number_format($state, 2))
+                    ->suffix(__("order_item.currency"))
+                    ->badge()
+                    ->color('warning')
+                    ->icon('heroicon-o-credit-card')
+                    ->sortable(),
+
+
+                TextColumn::make('sent_payouts')
+                    ->label(fn() => __('publishing_house.sent_payouts'))
+                    ->getStateUsing(fn($record) => $record->getSentPayoutTotal())
+                    ->formatStateUsing(fn($state) => number_format($state, 2))
+                    ->suffix(__("order_item.currency"))
+                    ->badge()
+                    ->color('info')
+                    ->icon('heroicon-o-credit-card')
+                    ->sortable(),
+
                 TextColumn::make('address')
                     ->label(fn() => __('publishing_house.address'))
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('website')
                     ->label(fn() => __('publishing_house.website'))
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('status')
                     ->label(fn() => __('user.status'))

@@ -14,21 +14,21 @@ class PayoutsOverview extends BaseWidget
 
     protected function getColumns(): int
     {
-        return 1;
+        return 2;
     }
 
 
     protected function getStats(): array
     {
-
-
-        // Total pending payouts to publishing houses
         $totalPendingPayouts = PublisherPayout::where('status', PublisherPayoutStatus::PENDING)
             ->sum('amount');
 
+        $totalSentPayouts = PublisherPayout::where('status', PublisherPayoutStatus::SENT)
+            ->sum('amount');
+
         return [
-            // Stat::make(__('order_item.total_sold_books'), number_format($totalSoldBooks)),
             Stat::make(__('order_item.total_pending_payouts'), number_format($totalPendingPayouts, 2) . ' ' . __('order_item.currency')),
+            Stat::make(__('order_item.total_revenue'), number_format($totalSentPayouts, 2) . ' ' . __('order_item.currency')),
         ];
     }
 }

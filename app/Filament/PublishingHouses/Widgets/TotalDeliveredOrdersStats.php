@@ -25,13 +25,12 @@ class TotalDeliveredOrdersStats extends BaseWidget
         $totalSoldBooks = OrderItem::whereIn('status', [OrderStatus::SHIPPED])
             ->sum('quantity');
 
-        // Total pending payouts to publishing houses
-        $totalPendingPayouts = PublisherPayout::where('status', PublisherPayoutStatus::SENT)
+        $totalSentPayouts = PublisherPayout::where('status', PublisherPayoutStatus::SENT)
             ->sum('amount');
 
         return [
             Stat::make(__('order_item.total_sold_books'), number_format($totalSoldBooks)),
-            Stat::make(__('order_item.total_revenue'), number_format($totalPendingPayouts, 2) . ' ' . __('order_item.currency')),
+            Stat::make(__('order_item.total_revenue'), number_format($totalSentPayouts, 2) . ' ' . __('order_item.currency')),
         ];
     }
 }

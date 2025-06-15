@@ -14,4 +14,6 @@ return [
     'logo' => 'Logo',
     'description' => 'Description',
     'social_links' => 'Social Links',
+    'pending_payouts' => 'Pending Payouts',
+    'sent_payouts' => 'Sent Payouts',
 ];

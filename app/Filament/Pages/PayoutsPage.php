@@ -1,23 +1,25 @@
 <?php
 
-namespace App\Filament\PublishingHouses\Pages;
+namespace App\Filament\Pages;
 
 use App\Enums\PublisherPayoutStatus;
-use App\Filament\PublishingHouses\Widgets\PayoutsOverview;
 use App\Models\PublisherPayout;
+use App\Models\PublishingHouse;
+use Filament\Actions\Action;
 use Filament\Pages\Page;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Support\Facades\Auth;
 
 class PayoutsPage extends Page implements HasTable
 {
     use InteractsWithTable;
-    protected static string $view = 'filament.publishing-houses.pages.payouts-page';
+    protected static string $view = 'filament.pages.payouts-page';
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
 
@@ -51,7 +53,6 @@ class PayoutsPage extends Page implements HasTable
     public function getCountForStatus(string $status): int
     {
         return PublisherPayout::query()
-            ->where('publishing_house_id', Auth::user()->publishingHouse->id)
             ->when($status, fn($query) => $query->where('status', $status))
             ->count();
     }
@@ -86,6 +87,9 @@ class PayoutsPage extends Page implements HasTable
                 TextColumn::make('orderItem.book.title')
                     ->label(__('payouts.book'))
                     ->sortable(),
+                TextColumn::make('publishingHouse.name')
+                    ->label(__('payouts.publishing_house'))
+                    ->sortable(),
                 TextColumn::make('orderItem.quantity')
                     ->label(__('payouts.quantity'))
                     ->sortable(),
@@ -117,15 +121,49 @@ class PayoutsPage extends Page implements HasTable
                     ->dateTime()
                     ->sortable(),
             ])
-            ->filters([])
+            ->filters([
+                SelectFilter::make('publishing_house')
+                    ->label(__('payouts.publishing_house'))
+                    ->relationship('publishingHouse', 'name')
+                    ->options(
+                        PublishingHouse::pluck('name', 'id')->toArray()
+                    )
+                    ->searchable()
+                    ->preload(),
+            ])
+            ->actions([
+                ActionGroup::make([
+                    Tables\Actions\Action::make('mark_as_sent')
+                        ->label(__('payouts.mark_as_sent'))
+                        ->icon('heroicon-o-check-badge')
+                        ->color('success')
+                        ->requiresConfirmation()
+                        ->modalHeading(__('payouts.mark_as_sent'))
+                        ->modalDescription(__('payouts.confirm_mark_sent'))
+                        ->action(function (PublisherPayout $record) {
+                            $record->update([
+                                'status' => PublisherPayoutStatus::SENT->value,
+                                'sent_at' => now(),
+                            ]);
+                        })
+                        ->visible(fn(PublisherPayout $record) => $record->status === PublisherPayoutStatus::PENDING->value),
+                    Tables\Actions\Action::make('mark_as_failed')
+                        ->icon('heroicon-o-x-circle')
+                        ->color('danger')
+                        ->label(__('payouts.mark_as_failed'))
+                        ->requiresConfirmation()
+                        ->modalHeading(__('payouts.mark_as_failed'))
+                        ->modalDescription(__('payouts.confirm_mark_failed'))
+                        ->action(function (PublisherPayout $record) {
+                            $record->update([
+                                'status' => PublisherPayoutStatus::FAILED->value,
+                                'sent_at' => null,
+                            ]);
+                        })
+                        ->visible(fn(PublisherPayout $record) => $record->status === PublisherPayoutStatus::PENDING->value),
+                ])
+            ])
             ->defaultSort('created_at', 'desc');
-    }
-
-    protected function getHeaderWidgets(): array
-    {
-        return [
-            PayoutsOverview::class
-        ];
     }
 
     protected function getTranslatedStatus(string $state): string
@@ -141,7 +179,7 @@ class PayoutsPage extends Page implements HasTable
     protected function getTableQuery()
     {
         return PublisherPayout::query()
-            ->where('publishing_house_id', Auth::user()->publishingHouse->id)
+            ->with(['orderItem.book', 'publishingHouse'])
             ->when($this->activeTab, fn($query) => $query->where('status', $this->activeTab));
     }
 

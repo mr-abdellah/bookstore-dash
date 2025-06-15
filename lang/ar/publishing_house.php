@@ -14,4 +14,6 @@ return [
     'logo' => 'الشعار',
     'description' => 'الوصف',
     'social_links' => 'روابط التواصل الاجتماعي',
+    'pending_payouts' => 'المدفوعات المعلقة',
+    'sent_payouts' => 'المدفوعات المرسلة',
 ];

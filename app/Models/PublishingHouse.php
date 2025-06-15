@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PublisherPayoutStatus;
 use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -62,5 +63,24 @@ class PublishingHouse extends Model
                         $query->where('publishing_house_id', $this->id);
                     }
                 ])->get();
+    }
+
+    public function payouts()
+    {
+        return $this->hasMany(PublisherPayout::class, 'publishing_house_id');
+    }
+
+    public function getPendingPayoutTotal(): float
+    {
+        return $this->payouts()
+            ->where('status', PublisherPayoutStatus::PENDING)
+            ->sum('amount');
+    }
+
+    public function getSentPayoutTotal(): float
+    {
+        return $this->payouts()
+            ->where('status', PublisherPayoutStatus::SENT)
+            ->sum('amount');
     }
 }
