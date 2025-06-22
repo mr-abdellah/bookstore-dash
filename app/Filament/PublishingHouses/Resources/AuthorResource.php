@@ -22,6 +22,7 @@ class AuthorResource extends Resource
     protected static ?string $model = Author::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-pencil';
+    protected static ?int $navigationSort = 4;
 
     public static function getEloquentQuery(): Builder
     {

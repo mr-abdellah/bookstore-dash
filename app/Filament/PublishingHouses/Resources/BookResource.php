@@ -20,6 +20,7 @@ class BookResource extends Resource
     protected static ?string $model = Book::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    protected static ?int $navigationSort = 6;
 
     public static function getLabel(): ?string
     {
@@ -72,7 +73,7 @@ class BookResource extends Resource
                     ->label(fn() => __('book.price'))
                     ->required()
                     ->numeric()
-                    ->suffix('DA'),
+                    ->suffix(__('order_item.currency')),
 
                 TextInput::make('quantity')
                     ->label(fn() => __('book.quantity'))
@@ -151,27 +152,15 @@ class BookResource extends Resource
                 Tables\Columns\TextColumn::make('author.name')
                     ->label(fn() => __('book.author_name'))
                     ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->placeholder('N/A'),
 
                 Tables\Columns\TextColumn::make('category.name_en')
                     ->label(fn() => __('book.category_name'))
                     ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->placeholder('N/A'),
 
-                Tables\Columns\TextColumn::make('quantity')
-                    ->label(fn() => __('book.quantity'))
-                    ->numeric(),
-
-
-                Tables\Columns\TextColumn::make('publishingHouse.name')
-                    ->label(fn() => __('book.publishing_house_name'))
-                    ->searchable()
-                    ->placeholder('N/A'),
-
-                Tables\Columns\TextColumn::make('discount.name')
-                    ->label(fn() => __('book.discount_name'))
-                    ->searchable()
-                    ->placeholder('N/A'),
 
                 Tables\Columns\TextColumn::make('title')
                     ->label(fn() => __('book.title'))
@@ -180,9 +169,14 @@ class BookResource extends Resource
 
                 Tables\Columns\TextColumn::make('price')
                     ->label(fn() => __('book.price'))
-                    ->money()
                     ->sortable()
-                    ->placeholder('N/A'),
+                    ->placeholder('N/A')
+                    ->suffix(__('order_item.currency')),
+
+                Tables\Columns\TextColumn::make('quantity')
+                    ->label(fn() => __('book.quantity'))
+                    ->numeric(),
+
 
                 Tables\Columns\TextColumn::make('language')
                     ->label(fn() => __('book.language'))

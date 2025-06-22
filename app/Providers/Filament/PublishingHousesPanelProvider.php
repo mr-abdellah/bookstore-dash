@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\PublishingHouses\Pages\Auth\EditProfile;
 use App\Filament\PublishingHouses\Pages\Auth\Register;
 use App\Filament\PublishingHouses\Widgets\PayoutsOverview;
 use App\Filament\Widgets\OrderItemChart;
@@ -44,6 +45,7 @@ class PublishingHousesPanelProvider extends PanelProvider
             ->registration(Register::class)
             ->passwordReset()
             ->emailVerification()
+            ->profile(EditProfile::class)
             ->discoverWidgets(in: app_path('Filament/PublishingHouses/Widgets'), for: 'App\\Filament\\PublishingHouses\\Widgets')
             ->widgets([
                 TotalDeliveredOrdersStats::class,

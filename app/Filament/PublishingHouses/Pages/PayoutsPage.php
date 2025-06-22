@@ -21,6 +21,8 @@ class PayoutsPage extends Page implements HasTable
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
 
+    protected static ?int $navigationSort = 3;
+
     public function getTitle(): string|Htmlable
     {
         return __('payouts.title');

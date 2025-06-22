@@ -13,6 +13,7 @@ use App\Models\OrderItem;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Facades\Auth;
 
 class NewOrders extends Page implements HasTable
 {
@@ -20,6 +21,8 @@ class NewOrders extends Page implements HasTable
 
     protected static ?string $navigationIcon = 'heroicon-o-clock';
     protected static string $view = 'filament.publishing-houses.pages.new-orders';
+    protected static ?int $navigationSort = 1;
+
 
     public function getTitle(): string|Htmlable
     {
@@ -38,7 +41,11 @@ class NewOrders extends Page implements HasTable
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) OrderItem::where('status', OrderStatus::CONFIRMED)->count();
+        return (string) OrderItem::where('status', OrderStatus::CONFIRMED)
+            ->where(
+                'publishing_house_id',
+                Auth::user()?->publishingHouse?->id
+            )->count();
     }
 
     protected function getHeaderWidgets(): array

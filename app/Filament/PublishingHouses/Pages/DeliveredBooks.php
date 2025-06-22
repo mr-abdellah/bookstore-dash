@@ -13,6 +13,7 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Facades\Auth;
 
 class DeliveredBooks extends Page implements HasTable
 {
@@ -20,6 +21,7 @@ class DeliveredBooks extends Page implements HasTable
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.publishing-houses.pages.delivered-books';
+    protected static ?int $navigationSort = 2;
 
     public function getTitle(): string|Htmlable
     {
@@ -47,7 +49,11 @@ class DeliveredBooks extends Page implements HasTable
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) OrderItem::where('status', OrderStatus::SHIPPED)->count();
+        return (string) OrderItem::where('status', OrderStatus::SHIPPED)
+            ->where(
+                'publishing_house_id',
+                Auth::user()?->publishingHouse?->id
+            )->count();
     }
 
 
