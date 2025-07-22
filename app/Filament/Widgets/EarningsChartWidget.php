@@ -3,14 +3,17 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\PlatformSettings;
+use App\Enums\OrderStatus;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\DB;
 
 class EarningsChartWidget extends ChartWidget
 {
     protected static ?int $sort = 1;
 
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
 
     protected static ?string $maxHeight = '300px';
 
@@ -28,8 +31,11 @@ class EarningsChartWidget extends ChartWidget
     {
         $platformPercentage = PlatformSettings::getSettings()?->profit_percentage ?? 0;
 
-        $data = Order::selectRaw('MONTH(created_at) as month, SUM(total) as total')
-            ->whereYear('created_at', now()->year)
+        // Get shipped order items for the current year
+        $data = OrderItem::where('status', OrderStatus::SHIPPED)
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->selectRaw('MONTH(orders.created_at) as month, SUM(order_items.unit_price * order_items.quantity * order_items.profit_percentage / 100) as earnings')
+            ->whereYear('orders.created_at', now()->year)
             ->groupBy('month')
             ->orderBy('month')
             ->get();
@@ -37,9 +43,16 @@ class EarningsChartWidget extends ChartWidget
         $labels = [];
         $earnings = [];
 
+        // Initialize data for all months
+        for ($month = 1; $month <= 12; $month++) {
+            $labels[] = now()->setMonth($month)->format('F');
+            $earnings[] = 0; // Default to 0
+        }
+
+        // Fill in actual earnings data
         foreach ($data as $row) {
-            $labels[] = now()->setMonth($row->month)->format('F');
-            $earnings[] = round($row->total * ($platformPercentage / 100), 2);
+            $monthIndex = $row->month - 1; // Adjust for 0-based array
+            $earnings[$monthIndex] = round($row->earnings * ($platformPercentage / 100), 2);
         }
 
         return [

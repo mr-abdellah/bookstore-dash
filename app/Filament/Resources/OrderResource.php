@@ -32,6 +32,16 @@ class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('order_status', OrderStatus::PENDING)->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
+
 
     public static function getLabel(): ?string
     {
@@ -293,7 +303,7 @@ class OrderResource extends Resource
                         fn(PaymentMethod $state): string => match ($state) {
                             PaymentMethod::OFFLINE => __('order.payment_methods.offline'),
                             PaymentMethod::ONLINE => __('order.payment_methods.online'),
-                            default =>  __('order.payment_methods.offline'),
+                            default => __('order.payment_methods.offline'),
                         }
                     ),
 

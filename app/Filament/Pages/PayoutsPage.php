@@ -22,6 +22,15 @@ class PayoutsPage extends Page implements HasTable
     protected static string $view = 'filament.pages.payouts-page';
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    public static function getNavigationBadge(): ?string
+    {
+        return PublisherPayout::where('status', PublisherPayoutStatus::PENDING->value)->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
 
     public function getTitle(): string|Htmlable
     {

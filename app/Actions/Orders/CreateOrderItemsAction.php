@@ -4,6 +4,7 @@ namespace App\Actions\Orders;
 
 use App\Models\Book;
 use App\Models\Order;
+use App\Models\PlatformSettings;
 use Illuminate\Support\Collection;
 
 class CreateOrderItemsAction
@@ -20,8 +21,7 @@ class CreateOrderItemsAction
                 'publishing_house_id' => $book->publishing_house_id,
                 'quantity' => $itemData['quantity'],
                 'unit_price' => $itemData['unit_price'] ?? $book->price,
-                'commission' => $this->calculateCommission($book, $itemData['quantity']),
-                'profit_percentage' => $book->profit_percentage ?? 0,
+                'profit_percentage' => PlatformSettings::getSettings()->profit_percentage ?: 0,
                 'status' => 'pending',
             ]);
 
@@ -29,14 +29,5 @@ class CreateOrderItemsAction
         }
 
         return $orderItems;
-    }
-
-    /**
-     * Calculate commission for the order item.
-     */
-    protected function calculateCommission(Book $book, int $quantity): float
-    {
-        $baseCommission = $book->commission_rate ?? 0.10; // 10% default
-        return ($book->price * $quantity) * $baseCommission;
     }
 }

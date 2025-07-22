@@ -85,4 +85,6 @@ class Order extends Model
         $deliveryCost = $this->deliveryType->cost ?? 0; // Assumes DeliveryType relation
         return $this->subtotal + $deliveryCost;
     }
+
+
 }

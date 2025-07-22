@@ -9,6 +9,7 @@ use App\Filament\Widgets\OrderItemChart;
 use App\Filament\Widgets\TotalDeliveredOrdersStats;
 use App\Filament\Widgets\TotalOrdersStats;
 use App\Http\Middleware\CheckUserPublishingHouse;
+use App\Livewire\PublishingHouse\PublishingHouseEarnings;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -24,7 +25,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use TomatoPHP\FilamentLanguageSwitcher\FilamentLanguageSwitcherPlugin;
-
+use Livewire\Livewire;
 
 class PublishingHousesPanelProvider extends PanelProvider
 {
@@ -66,6 +67,10 @@ class PublishingHousesPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
                 CheckUserPublishingHouse::class,
             ])
+            ->renderHook(
+                'panels::global-search.after',
+                fn() => Livewire::mount(PublishingHouseEarnings::class)
+            )
             ->authMiddleware([
                 Authenticate::class,
             ])

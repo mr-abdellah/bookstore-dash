@@ -4,7 +4,6 @@ namespace App\Filament\Widgets;
 
 use App\Models\Book;
 use App\Models\OrderItem;
-use App\Models\Stock;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Carbon;
@@ -29,11 +28,9 @@ class InventoryTurnoverWidget extends BaseWidget
             Stat::make(__('dashboard.inventory_turnover_overall'), number_format($overallRate, 2))
                 ->description(__('dashboard.description_cogs_year'))
                 ->color('primary'),
-
             Stat::make(__('dashboard.inventory_turnover_quarterly'), number_format($quarterlyRate, 2))
                 ->description(__('dashboard.description_last_3_months'))
                 ->color('info'),
-
             Stat::make(__('dashboard.inventory_turnover_monthly'), number_format($monthlyRate, 2))
                 ->description(str_replace(':trend', $trend, __('dashboard.description_trend')))
                 ->color($trendColor),
@@ -49,10 +46,9 @@ class InventoryTurnoverWidget extends BaseWidget
             ->sum(DB::raw('order_items.quantity * books.price'));
 
         // Get average inventory value
-        $averageInventory = Stock::query()
-            ->join('books', 'stocks.book_id', '=', 'books.id')
-            ->when($since, fn($query) => $query->where('stocks.updated_at', '>=', $since))
-            ->avg(DB::raw('stocks.quantity * books.price'));
+        $averageInventory = Book::query()
+            ->when($since, fn($query) => $query->where('books.updated_at', '>=', $since))
+            ->avg(DB::raw('books.quantity * books.price'));
 
         if ($averageInventory === 0 || $averageInventory === null) {
             return 0;

@@ -176,7 +176,7 @@ class PublishingHouseProfile extends Page
 
                         Forms\Components\Placeholder::make('pending_payouts')
                             ->label(__('publishing_house.pending_payments'))
-                            ->content(fn() => number_format($this->record->getPendingPayoutTotal(), 2) . ' €'),
+                            ->content(fn() => number_format($this->record->getPendingPayoutTotal(), 2) . __('order_item.currency')),
 
                         Forms\Components\Placeholder::make('total_reviews')
                             ->label(__('publishing_house.received_reviews'))
