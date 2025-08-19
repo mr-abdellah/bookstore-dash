@@ -38,4 +38,9 @@ return [
     'earnings' => 'الأرباح',
 
     'earnings_dzd' => 'الأرباح (دج)',
+
+    'book_title' => 'عنوان الكتاب',
+    'view_order' => 'عرض الطلب',
+    'view_publishing_house' => 'عرض دار النشر',
+
 ];

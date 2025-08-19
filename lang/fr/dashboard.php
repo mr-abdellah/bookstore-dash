@@ -38,4 +38,9 @@ return [
     'earnings' => 'Revenus',
 
     'earnings_dzd' => 'Revenus (DA)',
+
+    'book_title' => 'Titre du livre',
+    'view_order' => 'Voir la commande',
+    'view_publishing_house' => "Voir la maison d'édition",
+
 ];

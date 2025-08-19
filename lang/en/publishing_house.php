@@ -55,4 +55,37 @@ return [
     'square_recommended' => 'Square (recommended)',
     'landscape' => 'Landscape',
     'standard' => 'Standard',
+
+    'pages' => [
+        'view' => [
+            'title' => 'دار النشر',
+        ],
+    ],
+
+    'sections' => [
+        'overview' => 'نظرة عامة',
+        'description' => 'الوصف',
+        'quick_stats' => 'إحصاءات سريعة',
+    ],
+
+    'labels' => [
+        'logo' => 'الشعار',
+        'name' => 'الاسم',
+        'owner' => 'المالك',
+        'email' => 'البريد الإلكتروني',
+        'phone' => 'الهاتف',
+        'website' => 'الموقع الإلكتروني',
+        'address' => 'العنوان',
+        'established_year' => 'سنة التأسيس',
+        'status' => 'الحالة',
+        'description' => 'الوصف',
+        'books_count' => 'الكتب',
+        'order_items_count' => 'عناصر الطلب',
+        'pending_payout_total' => 'مدفوعات معلّقة (دج)',
+        'sent_payout_total' => 'مدفوعات مُرسلة (دج)',
+    ],
+
+    'placeholders' => [
+        'dash' => '-',
+    ],
 ];

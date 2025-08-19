@@ -53,7 +53,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 EarningsOverviewWidget::class,
                 EarningsChartWidget::class,
-                CustomerRetentionWidget::class,
+                // CustomerRetentionWidget::class,
                 EarningsTableWidget::class,
             ])
             ->renderHook(

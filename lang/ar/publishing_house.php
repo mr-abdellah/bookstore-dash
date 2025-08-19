@@ -55,4 +55,37 @@ return [
     'square_recommended' => 'مربع (موصى به)',
     'landscape' => 'أفقي',
     'standard' => 'قياسي',
+
+    'pages' => [
+        'view' => [
+            'title' => 'Publishing House',
+        ],
+    ],
+
+    'sections' => [
+        'overview' => 'Overview',
+        'description' => 'Description',
+        'quick_stats' => 'Quick Stats',
+    ],
+
+    'labels' => [
+        'logo' => 'Logo',
+        'name' => 'Name',
+        'owner' => 'Owner',
+        'email' => 'Email',
+        'phone' => 'Phone',
+        'website' => 'Website',
+        'address' => 'Address',
+        'established_year' => 'Established',
+        'status' => 'Status',
+        'description' => 'Description',
+        'books_count' => 'Books',
+        'order_items_count' => 'Order Items',
+        'pending_payout_total' => 'Pending Payouts (DA)',
+        'sent_payout_total' => 'Sent Payouts (DA)',
+    ],
+
+    'placeholders' => [
+        'dash' => '-',
+    ],
 ];

@@ -55,4 +55,37 @@ return [
     'square_recommended' => 'Carré (recommandé)',
     'landscape' => 'Paysage',
     'standard' => 'Standard',
+
+    'pages' => [
+        'view' => [
+            'title' => 'Maison d’édition',
+        ],
+    ],
+
+    'sections' => [
+        'overview' => 'Aperçu',
+        'description' => 'Description',
+        'quick_stats' => 'Statistiques',
+    ],
+
+    'labels' => [
+        'logo' => 'Logo',
+        'name' => 'Nom',
+        'owner' => 'Propriétaire',
+        'email' => 'E-mail',
+        'phone' => 'Téléphone',
+        'website' => 'Site web',
+        'address' => 'Adresse',
+        'established_year' => 'Fondée',
+        'status' => 'Statut',
+        'description' => 'Description',
+        'books_count' => 'Livres',
+        'order_items_count' => 'Articles de commande',
+        'pending_payout_total' => 'Paiements en attente (DA)',
+        'sent_payout_total' => 'Paiements envoyés (DA)',
+    ],
+
+    'placeholders' => [
+        'dash' => '-',
+    ],
 ];

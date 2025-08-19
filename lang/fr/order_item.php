@@ -33,5 +33,5 @@ return [
     'total_new_orders' => 'Total des nouvelles commandes',
     'total_revenue' => 'Revenu total',
     'total_orders' => 'Total des commandes',
-
+    'orders' => 'Commandes',
 ];

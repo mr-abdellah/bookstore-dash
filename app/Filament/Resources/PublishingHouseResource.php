@@ -16,6 +16,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 
@@ -206,6 +207,7 @@ class PublishingHouseResource extends Resource
             ])
             ->actions([
                 EditAction::make(),
+                ViewAction::make(),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
@@ -226,7 +228,9 @@ class PublishingHouseResource extends Resource
         return [
             'index' => Pages\ListPublishingHouses::route('/'),
             'create' => Pages\CreatePublishingHouse::route('/create'),
+            'view' => Pages\ViewPublishingHouse::route('/{record}'),
             'edit' => Pages\EditPublishingHouse::route('/{record}/edit'),
         ];
     }
+
 }

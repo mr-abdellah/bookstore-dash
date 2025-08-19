@@ -38,4 +38,8 @@ return [
     'earnings' => 'Earnings',
 
     'earnings_dzd' => 'Earnings (DZD)',
+
+    'book_title' => 'Book Title',
+    'view_order' => 'View Order',
+    'view_publishing_house' => 'View Publishing House',
 ];
