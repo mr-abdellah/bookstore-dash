@@ -65,12 +65,6 @@ class BookController extends Controller
 
         $book->author->avatar = $book->author->avatar ? asset('storage/' . $book->author->avatar) : null;
 
-        $isFavorite = Auth::check() && Favorite::where('user_id', Auth::id())
-            ->where('book_id', $id)
-            ->exists();
-
-        $book->is_favorite = $isFavorite;
-
         return response()->json([
             'status' => 'success',
             'data' => $book

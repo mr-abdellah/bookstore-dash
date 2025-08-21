@@ -63,6 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('books')->group(function () {
         Route::post('/{bookId}/reviews', [ReviewController::class, 'store']);
         Route::post('/{bookId}/favorites', [FavoriteController::class, 'store']);
+        Route::get('/{bookId}/is-favorite', [FavoriteController::class, 'isFavorite']);
     });
 
     // Reviews management

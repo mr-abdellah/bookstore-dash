@@ -137,4 +137,33 @@ class FavoriteController extends Controller
             'data' => $favorites
         ]);
     }
+
+    public function isFavorite($bookId)
+    {
+        $userId = auth()->id();
+    
+        if (!$userId) {
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'is_favorite' => false,
+                    'favorite_id' => null
+                ]
+            ]);
+        }
+    
+        $favorite = Favorite::where('user_id', $userId)
+            ->where('book_id', $bookId)
+            ->first();
+    
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'is_favorite' => (bool) $favorite,
+                'favorite_id' => $favorite?->id
+            ]
+        ]);
+    }
+    
+
 }
